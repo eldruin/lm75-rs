@@ -1,0 +1,29 @@
+[package]
+name = "lm75"
+version = "0.1.0"
+authors = ["Diego Barrios Romero <eldruin@gmail.com>"]
+repository = "https://github.com/eldruin/lm75-rs"
+license = "MIT OR Apache-2.0"
+description = "Platform-agnostic Rust driver for the LM75 temperature sensor and thermal watchdog."
+readme = "README.md"
+keywords = ["uv", "light", "sensor", "i2c", "driver", "embedded-hal-driver"]
+categories = ["embedded", "hardware-support", "no-std"]
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE-MIT",
+    "LICENSE-APACHE",
+]
+
+[dependencies]
+embedded-hal = "0.2"
+bit_field = "0.9"
+
+[dev-dependencies]
+linux-embedded-hal = "0.2"
+embedded-hal-mock = "0.2"
+
+[profile.release]
+lto = true

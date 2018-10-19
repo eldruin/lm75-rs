@@ -5,7 +5,8 @@ and thermal watchdog, based on the
 [`embedded-hal`](https://github.com/rust-embedded/embedded-hal) traits.
 
 This driver allows you to:
-- TODO
+- Enable/disable the device.
+- Read the temperature.
 
 ## The device
 The LM75 temperature sensor includes a delta-sigma analog-to-digital
@@ -27,9 +28,12 @@ in thermal management and protection.
 Datasheet:
 - [LM75](https://datasheets.maximintegrated.com/en/ds/LM75.pdf)
 
-This driver is also compatible with LM75B and LM75C: [LM75B/C Datasheet]
+This driver is also compatible with LM75A, LM75B and LM75C: [LM75B/C Datasheet]
 
 [LM75B/C Datasheet]: http://www.ti.com/lit/ds/symlink/lm75b.pdf
+
+And also at least with the devices MAX7500, MAX6625, MAX6626, DS75LV,
+and DS7505.
 
 ## License
 

@@ -4,7 +4,8 @@
 //! [`embedded-hal`]: https://github.com/rust-embedded/embedded-hal
 //!
 //! This driver allows you to:
-//! - TODO
+//! - Enable/disable the device.
+//! - Read the temperature.
 //!
 //! ## The device
 //! The LM75 temperature sensor includes a delta-sigma analog-to-digital
@@ -26,19 +27,76 @@
 //! Datasheet:
 //! - [LM75](https://datasheets.maximintegrated.com/en/ds/LM75.pdf)
 //!
-//! This driver is also compatible with LM75B and LM75C: [LM75B/C Datasheet]
+//! This driver is also compatible with LM75A, LM75B and LM75C: [LM75B/C Datasheet]
 //!
 //! [LM75B/C Datasheet]: http://www.ti.com/lit/ds/symlink/lm75b.pdf
 //!
+//! And also at least with the devices MAX7500, MAX6625, MAX6626, DS75LV,
+//! and DS7505.
+//!
+//! ## Usage examples (see also examples folder)
+//!
+//! ### Read temperature
+//!
+//! Import this crate and an `embedded_hal` implementation, then instantiate
+//! the device:
+//!
+//! ```no_run
+//! extern crate linux_embedded_hal as hal;
+//! extern crate lm75;
+//!
+//! use hal::I2cdev;
+//! use lm75::{ Lm75, SlaveAddr };
+//!
+//! # fn main() {
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
+//! let address = SlaveAddr::default();
+//! let mut sensor = Lm75::new(dev, address);
+//! let temperature = sensor.read_temperature().unwrap();
+//! println!("Temperature: {}", temperature);
+//! # }
+//! ```
+//!
+//! ### Provide an alternative address
+//!
+//! ```no_run
+//! extern crate linux_embedded_hal as hal;
+//! extern crate lm75;
+//!
+//! use hal::I2cdev;
+//! use lm75::{ Lm75, SlaveAddr };
+//!
+//! # fn main() {
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
+//! let (a2, a1, a0) = (false, false, true);
+//! let address = SlaveAddr::Alternative(a2, a1, a0);
+//! let mut sensor = Lm75::new(dev, address);
+//! # }
+//! ```
+//!
+//! ### Enable / disable the sensor
+//!
+//! ```no_run
+//! extern crate linux_embedded_hal as hal;
+//! extern crate lm75;
+//!
+//! use hal::I2cdev;
+//! use lm75::{ Lm75, SlaveAddr };
+//!
+//! # fn main() {
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
+//! let mut sensor = Lm75::new(dev, SlaveAddr::default());
+//! sensor.disable().unwrap(); // shutdown
+//! sensor.enable().unwrap();
+//! # }
+//! ```
 
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
 #![no_std]
 
 extern crate embedded_hal as hal;
-use hal::blocking::i2c::Write;
-extern crate bit_field;
-use bit_field::BitField;
+use hal::blocking::i2c;
 
 /// All possible errors in this crate
 #[derive(Debug)]
@@ -74,6 +132,7 @@ impl SlaveAddr {
         }
     }
 }
+
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
 
 struct Register;
@@ -81,24 +140,18 @@ struct Register;
 impl Register {
     const TEMPERATURE   : u8 = 0x00;
     const CONFIGURATION : u8 = 0x01;
-    const T_HYST        : u8 = 0x02;
-    const T_OS          : u8 = 0x03;
 }
 
 
 struct BitFlags;
 
 impl BitFlags {
-    const SHUTDOWN     : usize = 0;
-    const COMP_INT     : usize = 1;
-    const OS_POLARITY  : usize = 2;
-    const FAULT_QUEUE0 : usize = 3;
-    const FAULT_QUEUE1 : usize = 4;
+    const SHUTDOWN     : u8 = 0b0000_0001;
 }
 
 /// LM75 device driver.
 #[derive(Debug, Default)]
-pub struct LM75<I2C> {
+pub struct Lm75<I2C> {
     /// The concrete I²C device implementation.
     i2c: I2C,
     /// The I²C device address.
@@ -107,13 +160,15 @@ pub struct LM75<I2C> {
     config: u8,
 }
 
-impl<I2C, E> LM75<I2C>
+mod conversion;
+
+impl<I2C, E> Lm75<I2C>
 where
-    I2C: Write<Error = E>
+    I2C: i2c::Write<Error = E>
 {
     /// Create new instance of the LM75 device.
     pub fn new(i2c: I2C, address: SlaveAddr) -> Self {
-        LM75 {
+        Lm75 {
             i2c,
             address: address.addr(DEVICE_BASE_ADDRESS),
             config: 0
@@ -127,42 +182,36 @@ where
 
     /// Enable the sensor.
     pub fn enable(&mut self) -> Result<(), Error<E>> {
-        let mut config = self.config;
-        config.set_bit(BitFlags::SHUTDOWN, false);
-        self.write_config(config)
+        let config = self.config;
+        self.write_config(config & !BitFlags::SHUTDOWN)
     }
 
     /// Disable the sensor (shutdown).
     pub fn disable(&mut self) -> Result<(), Error<E>> {
-        let mut config = self.config;
-        config.set_bit(BitFlags::SHUTDOWN, true);
-        self.write_config(config)
+        let config = self.config;
+        self.write_config(config | BitFlags::SHUTDOWN)
     }
 
     fn write_config(&mut self, config: u8) -> Result<(), Error<E>> {
         self.i2c
-            .write(self.address, &[config])
+            .write(self.address, &[Register::CONFIGURATION, config])
             .map_err(Error::I2C)?;
         self.config = config;
         Ok(())
     }
 }
 
-fn convert_temp(msb: u8, lsb: u8) -> f32 {
-    let value = ( msb.get_bit(0) as u16
-                + msb.get_bit(1) as u16 * 2
-                + msb.get_bit(2) as u16 * 4
-                + msb.get_bit(3) as u16 * 8
-                + msb.get_bit(4) as u16 * 16
-                + msb.get_bit(5) as u16 * 32
-                + msb.get_bit(6) as u16 * 64) as f32
-                + (lsb.get_bit(7) as u8 as f32 * 0.5);
-    
-    if msb.get_bit(7) {
-        -value
-    }
-    else {
-        value
+impl<I2C, E> Lm75<I2C>
+where
+    I2C: i2c::WriteRead<Error = E>
+{
+    /// Read the temperature from the sensor.
+    pub fn read_temperature(&mut self) -> Result<f32, Error<E>> {
+        let mut data = [0; 2];
+        self.i2c
+            .write_read(self.address, &[Register::TEMPERATURE], &mut data)
+            .map_err(Error::I2C)?;
+        Ok(conversion::convert_temp_from_register(data[0], data[1]))
     }
 }
 
@@ -183,29 +232,5 @@ mod tests {
         assert_eq!(0b100_1010, SlaveAddr::Alternative(false,  true, false).addr(DEVICE_BASE_ADDRESS));
         assert_eq!(0b100_1100, SlaveAddr::Alternative( true, false, false).addr(DEVICE_BASE_ADDRESS));
         assert_eq!(0b100_1111, SlaveAddr::Alternative( true,  true,  true).addr(DEVICE_BASE_ADDRESS));
-    }
-
-    #[test]
-    fn can_convert_temperature() {
-        assert_eq!(   0.0, convert_temp(0b0000_0000, 0b0101_1010));
-        assert_eq!(   0.5, convert_temp(0b0000_0000, 0b1101_1010));
-        assert_eq!(   1.0, convert_temp(0b0000_0001, 0b0101_1010));
-        assert_eq!(   2.0, convert_temp(0b0000_0010, 0b0101_1010));
-        assert_eq!(   4.0, convert_temp(0b0000_0100, 0b0101_1010));
-        assert_eq!(   8.0, convert_temp(0b0000_1000, 0b0101_1010));
-        assert_eq!(  16.0, convert_temp(0b0001_0000, 0b0101_1010));
-        assert_eq!(  32.0, convert_temp(0b0010_0000, 0b0101_1010));
-        assert_eq!(  64.0, convert_temp(0b0100_0000, 0b0101_1010));
-        assert_eq!( 127.5, convert_temp(0b0111_1111, 0b1101_1010));
-        assert_eq!(  -0.0, convert_temp(0b1000_0000, 0b0101_1010));
-        assert_eq!(  -0.5, convert_temp(0b1000_0000, 0b1101_1010));
-        assert_eq!(  -1.0, convert_temp(0b1000_0001, 0b0101_1010));
-        assert_eq!(  -2.0, convert_temp(0b1000_0010, 0b0101_1010));
-        assert_eq!(  -4.0, convert_temp(0b1000_0100, 0b0101_1010));
-        assert_eq!(  -8.0, convert_temp(0b1000_1000, 0b0101_1010));
-        assert_eq!( -16.0, convert_temp(0b1001_0000, 0b0101_1010));
-        assert_eq!( -32.0, convert_temp(0b1010_0000, 0b0101_1010));
-        assert_eq!( -64.0, convert_temp(0b1100_0000, 0b0101_1010));
-        assert_eq!(-127.5, convert_temp(0b1111_1111, 0b1101_1010));
     }
 }

@@ -15,7 +15,9 @@ pub fn convert_temp_to_register(temp: f32) -> (u8, u8) {
     let msb = temp as u8;
     if temp < 0.0 {
         let msb_ones_complement = msb ^ 0;
-        if (temp - temp as i8 as f32).abs() > 0.499 {
+        // abs() is not available for bare metal targets at the moment
+        let diff = temp - temp as i8 as f32;
+        if diff > 0.499 || diff < 0.499 {
             if msb_ones_complement == 0 {
                 // -0.5 case
                 return (255, 1);

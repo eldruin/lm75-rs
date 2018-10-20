@@ -9,10 +9,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ...
 
+## [0.1.1] - 2018-10-20
+
+This crate is now functionally complete.
+
+### Added
+
+- Setting the fault queue.
+- Setting the OS temperature.
+- Setting the hysteresis temperature.
+- Setting the OS operation mode.
+- Setting the OS polarity.
+
 ## 0.1.0 - 2018-10-19
 
 This is the initial release to crates.io. All changes will be documented in
 this CHANGELOG.
 
 [Unreleased]: https://github.com/eldruin/lm75-rs/compare/v0.1.0...HEAD
-
+[0.1.1]: https://github.com/eldruin/lm75-rs/compare/v0.1.0...v0.1.1

@@ -7,6 +7,11 @@ and thermal watchdog, based on the
 This driver allows you to:
 - Enable/disable the device.
 - Read the temperature.
+- Set the fault queue.
+- Set the OS temperature.
+- Set the hysteresis temperature.
+- Set the OS operation mode.
+- Set the OS polarity.
 
 ## The device
 The LM75 temperature sensor includes a delta-sigma analog-to-digital

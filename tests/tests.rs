@@ -97,30 +97,22 @@ set_temp_test!(can_set_os_temp_0_5, set_os_temperature,   0.5, Register::T_OS, 0
 set_temp_test!(can_set_os_temp_min, set_os_temperature, -55.0, Register::T_OS, 0b1100_1001, 0);
 set_temp_test!(can_set_os_temp_max, set_os_temperature, 125.0, Register::T_OS, 0b0111_1101, 0);
 
-#[test]
-fn set_os_temperature_too_low() {
-    let mut dev = setup(&[0]);
-    assert_invalid_input_data_error(dev.set_os_temperature(-55.5));
+macro_rules! invalid_temp_test {
+    ($test_name:ident, $method:ident, $value:expr) => {
+        #[test]
+        fn $test_name() {
+            let mut dev = setup(&[0]);
+            assert_invalid_input_data_error(dev.$method($value));
+        }
+    };
 }
 
-#[test]
-fn set_os_temperature_too_high() {
-    let mut dev = setup(&[0]);
-    assert_invalid_input_data_error(dev.set_os_temperature(125.5));
-}
+invalid_temp_test!(set_os_temperature_too_low,  set_os_temperature, -55.5);
+invalid_temp_test!(set_os_temperature_too_high, set_os_temperature, 125.5);
 
 set_temp_test!(can_set_hyst_temp_0_5, set_hysteresis_temperature,   0.5, Register::T_HYST, 0b0000_0000, 1);
 set_temp_test!(can_set_hyst_temp_min, set_hysteresis_temperature, -55.0, Register::T_HYST, 0b1100_1001, 0);
 set_temp_test!(can_set_hyst_temp_max, set_hysteresis_temperature, 125.0, Register::T_HYST, 0b0111_1101, 0);
 
-#[test]
-fn set_hyst_temperature_too_low() {
-    let mut dev = setup(&[0]);
-    assert_invalid_input_data_error(dev.set_hysteresis_temperature(-55.5));
-}
-
-#[test]
-fn set_hyst_temperature_too_high() {
-    let mut dev = setup(&[0]);
-    assert_invalid_input_data_error(dev.set_hysteresis_temperature(125.5));
-}
+invalid_temp_test!(set_hyst_temperature_too_low,  set_hysteresis_temperature, -55.5);
+invalid_temp_test!(set_hyst_temperature_too_high, set_hysteresis_temperature, 125.5);

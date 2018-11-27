@@ -42,10 +42,11 @@
 //!
 //! ## Usage examples (see also examples folder)
 //!
+//! To use this driver, import this crate and an `embedded_hal` implementation,
+//! then instantiate the device.
+//!
 //! ### Read temperature
 //!
-//! Import this crate and an `embedded_hal` implementation, then instantiate
-//! the device:
 //!
 //! ```no_run
 //! extern crate linux_embedded_hal as hal;

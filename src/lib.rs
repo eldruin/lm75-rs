@@ -233,7 +233,7 @@ impl SlaveAddr {
 /// Number of consecutive faults necessary to trigger OS condition.
 #[derive(Debug, Clone)]
 pub enum FaultQueue {
-    /// 1 fault will trigger OS condition
+    /// 1 fault will trigger OS condition (default)
     _1,
     /// 2 consecutive faults will trigger OS condition
     _2,
@@ -246,7 +246,7 @@ pub enum FaultQueue {
 /// OS polarity
 #[derive(Debug, Clone)]
 pub enum OsPolarity {
-    /// Active low
+    /// Active low (default)
     ActiveLow,
     /// Active high
     ActiveHigh
@@ -255,7 +255,7 @@ pub enum OsPolarity {
 /// OS operation mode
 #[derive(Debug, Clone)]
 pub enum OsMode {
-    /// Comparator
+    /// Comparator (default)
     Comparator,
     /// Interrupt
     Interrupt
@@ -314,7 +314,7 @@ where
         self.i2c
     }
 
-    /// Enable the sensor.
+    /// Enable the sensor (default state).
     pub fn enable(&mut self) -> Result<(), Error<E>> {
         let config = self.config;
         self.write_config(config & !BitFlags::SHUTDOWN)

@@ -45,8 +45,11 @@
 //! To use this driver, import this crate and an `embedded_hal` implementation,
 //! then instantiate the device.
 //!
-//! ### Read temperature
+//! Please find additional examples in this repository: [lm75-examples]
 //!
+//! [lm75-examples]: https://github.com/eldruin/lm75-examples
+//!
+//! ### Read temperature
 //!
 //! ```no_run
 //! extern crate linux_embedded_hal as hal;

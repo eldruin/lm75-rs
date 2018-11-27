@@ -40,6 +40,10 @@ This driver is also compatible with LM75A, LM75B and LM75C: [LM75B/C Datasheet]
 And also at least with the devices MAX7500, MAX6625, MAX6626, DS75LV,
 and DS7505.
 
+Please find additional examples in this repository: [lm75-examples]
+
+[lm75-examples]: https://github.com/eldruin/lm75-examples
+
 ## License
 
 Licensed under either of

@@ -39,7 +39,7 @@ in thermal management and protection.
 Datasheet:
 - [LM75](https://datasheets.maximintegrated.com/en/ds/LM75.pdf)
 
-This driver is also compatible with at least LM75A, [LM75B, LM75C],
+This driver is also compatible with at least [LM75A], [LM75B, LM75C],
 [AT30TS75A], [DS1775], [DS75], [DS7505], [G751], [MAX7500/1/2/3/4], [MAX6625], [MCP9800/1/2/3],
 [STDS75], [TCN75].
 
@@ -48,6 +48,7 @@ This driver is also compatible with at least LM75A, [LM75B, LM75C],
 [DS75]: https://datasheets.maximintegrated.com/en/ds/DS75.pdf
 [DS7505]: https://datasheets.maximintegrated.com/en/ds/DS7505.pdf
 [G751]: http://www.gmt.com.tw/product/datasheet/EDS-751.pdf
+[LM75A]: https://www.nxp.com/docs/en/data-sheet/LM75A.pdf
 [LM75B, LM75C]: http://www.ti.com/lit/ds/symlink/lm75b.pdf
 [MAX6625]: https://datasheets.maximintegrated.com/en/ds/MAX6625-MAX6626.pdf
 [MAX7500/1/2/3/4]: https://datasheets.maximintegrated.com/en/ds/MAX7500-MAX7504.pdf

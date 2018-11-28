@@ -4,33 +4,32 @@ pub fn convert_temp_from_register(msb: u8, lsb: u8) -> f32 {
     // msb is stored as two's complement so we can just do this:
     let value = msb as i8;
     if (lsb >> 7) != 0 {
-        value as f32 + 0.5
+        f32::from(value) + 0.5
     }
     else {
-        value as f32
+        f32::from(value)
     }
 }
 
 pub fn convert_temp_to_register(temp: f32) -> (u8, u8) {
     let msb = temp as u8;
     if temp < 0.0 {
-        let msb_ones_complement = msb ^ 0;
         // abs() is not available for bare metal targets at the moment
-        let diff = temp - temp as i8 as f32;
+        let diff = temp - f32::from(temp as i8);
         if diff > 0.499 || diff < -0.499 {
-            if msb_ones_complement == 0 {
+            if msb == 0 {
                 // -0.5 case
                 return (255, 1);
             }
             else {
-                return (msb_ones_complement - 1, 1);
+                return (msb - 1, 1);
             }
         }
         else {
-            return (msb_ones_complement, 0);
+            return (msb, 0);
         }
     }
-    if temp - temp as i8 as f32 > 0.499 {
+    if temp - f32::from(temp as i8) > 0.499 {
         (msb as u8, 1)
     }
     else {

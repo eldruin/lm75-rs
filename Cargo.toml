@@ -12,16 +12,17 @@ homepage = "https://github.com/eldruin/lm75-rs"
 documentation = "https://docs.rs/lm75"
 include = [
     "**/*.rs",
-    "Cargo.toml",
-    "README.md",
-    "CHANGELOG.md",
-    "LICENSE-MIT",
-    "LICENSE-APACHE",
+    "/Cargo.toml",
+    "/README.md",
+    "/CHANGELOG.md",
+    "/LICENSE-MIT",
+    "/LICENSE-APACHE",
 ]
 
-[badges.travis-ci]
-branch = "master"
-repository = "eldruin/lm75-rs"
+[badges]
+travis-ci = { repository = "eldruin/lm75-rs", branch = "master" }
+coveralls = { repository = "eldruin/lm75-rs", branch = "master", service = "github" }
+maintenance = { status = "actively-developed" }
 
 [dependencies]
 embedded-hal = "0.2"

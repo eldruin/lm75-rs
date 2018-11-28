@@ -193,8 +193,7 @@
 //! # }
 //! ```
 
-#![deny(unsafe_code)]
-#![deny(missing_docs)]
+#![deny(missing_docs, unsafe_code, warnings)]
 #![no_std]
 
 extern crate embedded_hal as hal;

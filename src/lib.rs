@@ -292,6 +292,30 @@ impl BitFlags {
     const FAULT_QUEUE1 : u8 = 0b0001_0000;
 }
 
+#[derive(Debug, Clone, Copy)]
+struct Config {
+    bits: u8,
+}
+
+impl Config {
+    fn with_high(self, mask: u8) -> Self {
+        Config {
+            bits: self.bits | mask,
+        }
+    }
+    fn with_low(self, mask: u8) -> Self {
+        Config {
+            bits: self.bits & !mask,
+        }
+    }
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Config { bits: 0 }
+    }
+}
+
 /// LM75 device driver.
 #[derive(Debug, Default)]
 pub struct Lm75<I2C> {
@@ -300,7 +324,7 @@ pub struct Lm75<I2C> {
     /// The I²C device address.
     address: u8,
     /// Configuration register status.
-    config: u8,
+    config: Config,
 }
 
 mod conversion;
@@ -314,7 +338,7 @@ where
         Lm75 {
             i2c,
             address: address.addr(DEVICE_BASE_ADDRESS),
-            config: 0
+            config: Config::default()
         }
     }
 
@@ -326,47 +350,44 @@ where
     /// Enable the sensor (default state).
     pub fn enable(&mut self) -> Result<(), Error<E>> {
         let config = self.config;
-        self.write_config(config & !BitFlags::SHUTDOWN)
+        self.write_config(config.with_low(BitFlags::SHUTDOWN))
     }
 
     /// Disable the sensor (shutdown).
     pub fn disable(&mut self) -> Result<(), Error<E>> {
         let config = self.config;
-        self.write_config(config | BitFlags::SHUTDOWN)
+        self.write_config(config.with_high(BitFlags::SHUTDOWN))
     }
 
     /// Set the fault queue.
     ///
     /// Set the number of consecutive faults that will trigger an OS condition.
     pub fn set_fault_queue(&mut self, fq: FaultQueue) -> Result<(), Error<E>> {
-        let mut config = self.config;
+        let config = self.config;
         match fq {
-            FaultQueue::_1 => config = config & !BitFlags::FAULT_QUEUE1 & !BitFlags::FAULT_QUEUE0,
-            FaultQueue::_2 => config = config & !BitFlags::FAULT_QUEUE1 |  BitFlags::FAULT_QUEUE0,
-            FaultQueue::_4 => config = config |  BitFlags::FAULT_QUEUE1 & !BitFlags::FAULT_QUEUE0,
-            FaultQueue::_6 => config = config |  BitFlags::FAULT_QUEUE1 |  BitFlags::FAULT_QUEUE0,
+            FaultQueue::_1 => self.write_config(config.with_low( BitFlags::FAULT_QUEUE1).with_low( BitFlags::FAULT_QUEUE0)),
+            FaultQueue::_2 => self.write_config(config.with_low( BitFlags::FAULT_QUEUE1).with_high(BitFlags::FAULT_QUEUE0)),
+            FaultQueue::_4 => self.write_config(config.with_high(BitFlags::FAULT_QUEUE1).with_low( BitFlags::FAULT_QUEUE0)),
+            FaultQueue::_6 => self.write_config(config.with_high(BitFlags::FAULT_QUEUE1).with_high(BitFlags::FAULT_QUEUE0)),
         }
-        self.write_config(config)
     }
 
     /// Set the OS polarity.
     pub fn set_os_polarity(&mut self, polarity: OsPolarity) -> Result<(), Error<E>> {
-        let mut config = self.config;
+        let config = self.config;
         match polarity {
-            OsPolarity::ActiveLow  => config = config & !BitFlags::OS_POLARITY,
-            OsPolarity::ActiveHigh => config = config |  BitFlags::OS_POLARITY,
+            OsPolarity::ActiveLow  => self.write_config(config.with_low( BitFlags::OS_POLARITY)),
+            OsPolarity::ActiveHigh => self.write_config(config.with_high(BitFlags::OS_POLARITY)),
         }
-        self.write_config(config)
     }
 
     /// Set the OS operation mode.
     pub fn set_os_mode(&mut self, mode: OsMode) -> Result<(), Error<E>> {
-        let mut config = self.config;
+        let config = self.config;
         match mode {
-            OsMode::Comparator => config = config & !BitFlags::COMP_INT,
-            OsMode::Interrupt  => config = config |  BitFlags::COMP_INT,
+            OsMode::Comparator => self.write_config(config.with_low( BitFlags::COMP_INT)),
+            OsMode::Interrupt  => self.write_config(config.with_high(BitFlags::COMP_INT)),
         }
-        self.write_config(config)
     }
 
     /// Set the OS temperature.
@@ -391,9 +412,9 @@ where
             .map_err(Error::I2C)
     }
 
-    fn write_config(&mut self, config: u8) -> Result<(), Error<E>> {
+    fn write_config(&mut self, config: Config) -> Result<(), Error<E>> {
         self.i2c
-            .write(self.address, &[Register::CONFIGURATION, config])
+            .write(self.address, &[Register::CONFIGURATION, config.bits])
             .map_err(Error::I2C)?;
         self.config = config;
         Ok(())

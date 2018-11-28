@@ -33,12 +33,21 @@
 //! Datasheet:
 //! - [LM75](https://datasheets.maximintegrated.com/en/ds/LM75.pdf)
 //!
-//! This driver is also compatible with LM75A, LM75B and LM75C: [LM75B/C Datasheet]
+//! This driver is also compatible with at least LM75A, [LM75B, LM75C],
+//! [AT30TS75A], [DS1775], [DS75], [DS7505], [G751], [MAX7500/1/2/3/4],
+//! [MAX6625], [MCP9800/1/2/3], [STDS75], [TCN75].
 //!
-//! [LM75B/C Datasheet]: http://www.ti.com/lit/ds/symlink/lm75b.pdf
-//!
-//! And also at least with the devices MAX7500, MAX6625, MAX6626, DS75LV,
-//! and DS7505.
+//! [AT30TS75A]: http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8839-DTS-AT30TS75A-Datasheet.pdf
+//! [DS1775]: https://datasheets.maximintegrated.com/en/ds/DS1775-DS1775R.pdf
+//! [DS75]: https://datasheets.maximintegrated.com/en/ds/DS75.pdf
+//! [DS7505]: https://datasheets.maximintegrated.com/en/ds/DS7505.pdf
+//! [G751]: http://www.gmt.com.tw/product/datasheet/EDS-751.pdf
+//! [LM75B, LM75C]: http://www.ti.com/lit/ds/symlink/lm75b.pdf
+//! [MAX6625]: https://datasheets.maximintegrated.com/en/ds/MAX6625-MAX6626.pdf
+//! [MAX7500/1/2/3/4]: https://datasheets.maximintegrated.com/en/ds/MAX7500-MAX7504.pdf
+//! [MCP9800/1/2/3]: http://ww1.microchip.com/downloads/en/DeviceDoc/21909d.pdf
+//! [STDS75]: https://www.st.com/resource/en/datasheet/stds75.pdf
+//! [TCN75]: http://ww1.microchip.com/downloads/en/DeviceDoc/21490D.pdf
 //!
 //! ## Usage examples (see also examples folder)
 //!

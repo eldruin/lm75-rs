@@ -240,7 +240,7 @@ impl SlaveAddr {
 /// Fault queue
 ///
 /// Number of consecutive faults necessary to trigger OS condition.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum FaultQueue {
     /// 1 fault will trigger OS condition (default)
     _1,
@@ -253,7 +253,7 @@ pub enum FaultQueue {
 }
 
 /// OS polarity
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum OsPolarity {
     /// Active low (default)
     ActiveLow,
@@ -262,7 +262,7 @@ pub enum OsPolarity {
 }
 
 /// OS operation mode
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum OsMode {
     /// Comparator (default)
     Comparator,

@@ -56,9 +56,27 @@ This driver is also compatible with at least [LM75A], [LM75B, LM75C],
 [STDS75]: https://www.st.com/resource/en/datasheet/stds75.pdf
 [TCN75]: http://ww1.microchip.com/downloads/en/DeviceDoc/21490D.pdf
 
+### Usage
+
 Please find additional examples in this repository: [lm75-examples]
 
 [lm75-examples]: https://github.com/eldruin/lm75-examples
+
+```rust
+extern crate linux_embedded_hal as hal;
+extern crate lm75;
+
+use hal::I2cdev;
+use lm75::{ Lm75, SlaveAddr };
+
+fn main() {
+    let dev = I2cdev::new("/dev/i2c-1").unwrap();
+    let address = SlaveAddr::default();
+    let mut sensor = Lm75::new(dev, address);
+    let temp_celsius = sensor.read_temperature().unwrap();
+    println!("Temperature: {}ºC", temp_celsius);
+}
+```
 
 ## License
 

@@ -72,8 +72,8 @@
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let mut sensor = Lm75::new(dev, address);
-//! let temperature = sensor.read_temperature().unwrap();
-//! println!("Temperature: {}", temperature);
+//! let temp_celsius = sensor.read_temperature().unwrap();
+//! println!("Temperature: {}ºC", temp_celsius);
 //! # }
 //! ```
 //!
@@ -157,7 +157,8 @@
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut sensor = Lm75::new(dev, SlaveAddr::default());
-//! sensor.set_os_temperature(50.0).unwrap();
+//! let temp_celsius = 50.0
+//! sensor.set_os_temperature(temp_celsius).unwrap();
 //! # }
 //! ```
 //!
@@ -173,7 +174,8 @@
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut sensor = Lm75::new(dev, SlaveAddr::default());
-//! sensor.set_hysteresis_temperature(40.0).unwrap();
+//! let temp_celsius = 40.0;
+//! sensor.set_hysteresis_temperature(temp_celsius).unwrap();
 //! # }
 //! ```
 //!
@@ -390,7 +392,7 @@ where
         }
     }
 
-    /// Set the OS temperature.
+    /// Set the OS temperature (celsius).
     pub fn set_os_temperature(&mut self, temperature: f32) -> Result<(), Error<E>> {
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
@@ -401,7 +403,7 @@ where
             .map_err(Error::I2C)
     }
 
-    /// Set the hysteresis temperature.
+    /// Set the hysteresis temperature (celsius).
     pub fn set_hysteresis_temperature(&mut self, temperature: f32) -> Result<(), Error<E>> {
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
@@ -425,7 +427,7 @@ impl<I2C, E> Lm75<I2C>
 where
     I2C: i2c::WriteRead<Error = E>
 {
-    /// Read the temperature from the sensor.
+    /// Read the temperature from the sensor (celsius).
     pub fn read_temperature(&mut self) -> Result<f32, Error<E>> {
         let mut data = [0; 2];
         self.i2c

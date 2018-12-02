@@ -157,7 +157,7 @@
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut sensor = Lm75::new(dev, SlaveAddr::default());
-//! let temp_celsius = 50.0
+//! let temp_celsius = 50.0;
 //! sensor.set_os_temperature(temp_celsius).unwrap();
 //! # }
 //! ```

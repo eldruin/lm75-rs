@@ -58,9 +58,9 @@ This driver is also compatible with at least [LM75A], [LM75B, LM75C],
 
 ### Usage
 
-Please find additional examples in this repository: [lm75-examples]
+Please find additional examples using hardware in this repository: [driver-examples]
 
-[lm75-examples]: https://github.com/eldruin/lm75-examples
+[driver-examples]: https://github.com/eldruin/driver-examples
 
 ```rust
 extern crate linux_embedded_hal as hal;

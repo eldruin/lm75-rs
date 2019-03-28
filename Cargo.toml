@@ -11,7 +11,7 @@ categories = ["embedded", "hardware-support", "no-std"]
 homepage = "https://github.com/eldruin/lm75-rs"
 documentation = "https://docs.rs/lm75"
 include = [
-    "**/*.rs",
+    "/**/*.rs",
     "/Cargo.toml",
     "/README.md",
     "/CHANGELOG.md",

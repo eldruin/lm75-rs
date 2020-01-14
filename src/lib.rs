@@ -65,13 +65,11 @@
 //! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let mut sensor = Lm75::new(dev, address);
 //! let temp_celsius = sensor.read_temperature().unwrap();
 //! println!("Temperature: {}ºC", temp_celsius);
-//! # }
 //! ```
 //!
 //! ### Provide an alternative address
@@ -80,12 +78,10 @@
 //! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let (a2, a1, a0) = (false, false, true);
 //! let address = SlaveAddr::Alternative(a2, a1, a0);
 //! let mut sensor = Lm75::new(dev, address);
-//! # }
 //! ```
 //!
 //! ### Set the fault queue
@@ -97,11 +93,9 @@
 //! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr, FaultQueue};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut sensor = Lm75::new(dev, SlaveAddr::default());
 //! sensor.set_fault_queue(FaultQueue::_4).unwrap();
-//! # }
 //! ```
 //!
 //! ### Set the OS polarity
@@ -110,11 +104,9 @@
 //! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr, OsPolarity};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut sensor = Lm75::new(dev, SlaveAddr::default());
 //! sensor.set_os_polarity(OsPolarity::ActiveHigh).unwrap();
-//! # }
 //! ```
 //!
 //! ### Set the OS operation mode
@@ -123,11 +115,9 @@
 //! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr, OsMode};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut sensor = Lm75::new(dev, SlaveAddr::default());
 //! sensor.set_os_mode(OsMode::Interrupt).unwrap();
-//! # }
 //! ```
 //!
 //! ### Set the OS temperature
@@ -136,12 +126,10 @@
 //! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut sensor = Lm75::new(dev, SlaveAddr::default());
 //! let temp_celsius = 50.0;
 //! sensor.set_os_temperature(temp_celsius).unwrap();
-//! # }
 //! ```
 //!
 //! ### Set the hysteresis temperature
@@ -150,12 +138,10 @@
 //! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut sensor = Lm75::new(dev, SlaveAddr::default());
 //! let temp_celsius = 40.0;
 //! sensor.set_hysteresis_temperature(temp_celsius).unwrap();
-//! # }
 //! ```
 //!
 //! ### Enable / disable the sensor
@@ -164,12 +150,10 @@
 //! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut sensor = Lm75::new(dev, SlaveAddr::default());
 //! sensor.disable().unwrap(); // shutdown
 //! sensor.enable().unwrap();
-//! # }
 //! ```
 
 #![deny(missing_docs, unsafe_code)]

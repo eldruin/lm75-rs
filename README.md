@@ -62,10 +62,7 @@ Please find additional examples using hardware in this repository: [driver-examp
 [driver-examples]: https://github.com/eldruin/driver-examples
 
 ```rust
-extern crate linux_embedded_hal as hal;
-extern crate lm75;
-
-use hal::I2cdev;
+use linux_embedded_hal::I2cdev;
 use lm75::{Lm75, SlaveAddr};
 
 fn main() {

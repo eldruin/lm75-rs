@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Parameter enums are now copyable and comparable.
 
 ### Changed
-- Improved documentation
+- Improved documentation.
+- Use edition 2018 internally.
 
 ## [0.1.1] - 2018-10-20
 

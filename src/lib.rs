@@ -62,10 +62,7 @@
 //! ### Read temperature
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate lm75;
-//!
-//! use hal::I2cdev;
+//! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr};
 //!
 //! # fn main() {
@@ -80,10 +77,7 @@
 //! ### Provide an alternative address
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate lm75;
-//!
-//! use hal::I2cdev;
+//! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr};
 //!
 //! # fn main() {
@@ -100,11 +94,8 @@
 //! an OS condition.
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate lm75;
-//!
-//! use hal::I2cdev;
-//! use lm75::{ Lm75, SlaveAddr, FaultQueue };
+//! use linux_embedded_hal::I2cdev;
+//! use lm75::{Lm75, SlaveAddr, FaultQueue};
 //!
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
@@ -116,11 +107,8 @@
 //! ### Set the OS polarity
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate lm75;
-//!
-//! use hal::I2cdev;
-//! use lm75::{ Lm75, SlaveAddr, OsPolarity };
+//! use linux_embedded_hal::I2cdev;
+//! use lm75::{Lm75, SlaveAddr, OsPolarity};
 //!
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
@@ -132,11 +120,8 @@
 //! ### Set the OS operation mode
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate lm75;
-//!
-//! use hal::I2cdev;
-//! use lm75::{ Lm75, SlaveAddr, OsMode };
+//! use linux_embedded_hal::I2cdev;
+//! use lm75::{Lm75, SlaveAddr, OsMode};
 //!
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
@@ -148,10 +133,7 @@
 //! ### Set the OS temperature
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate lm75;
-//!
-//! use hal::I2cdev;
+//! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr};
 //!
 //! # fn main() {
@@ -165,10 +147,7 @@
 //! ### Set the hysteresis temperature
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate lm75;
-//!
-//! use hal::I2cdev;
+//! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr};
 //!
 //! # fn main() {
@@ -182,10 +161,7 @@
 //! ### Enable / disable the sensor
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate lm75;
-//!
-//! use hal::I2cdev;
+//! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, SlaveAddr};
 //!
 //! # fn main() {
@@ -199,8 +175,7 @@
 #![deny(missing_docs, unsafe_code)]
 #![no_std]
 
-extern crate embedded_hal as hal;
-use hal::blocking::i2c;
+use embedded_hal::blocking::i2c;
 
 /// All possible errors in this crate
 #[derive(Debug)]
@@ -454,7 +429,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use DEVICE_BASE_ADDRESS as ADDR;
+    use crate::DEVICE_BASE_ADDRESS as ADDR;
 
     #[test]
     fn can_get_default_address() {

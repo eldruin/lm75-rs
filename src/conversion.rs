@@ -12,7 +12,7 @@ pub fn convert_temp_from_register(msb: u8, lsb: u8) -> f32 {
 }
 
 pub fn convert_temp_to_register(temp: f32) -> (u8, u8) {
-    let msb = temp as u8;
+    let msb = temp as i8 as u8;
     if temp < 0.0 {
         // abs() is not available for bare metal targets at the moment
         let diff = temp - f32::from(temp as i8);

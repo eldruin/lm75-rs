@@ -4,7 +4,6 @@
 [![Docs](https://docs.rs/lm75/badge.svg)](https://docs.rs/lm75)
 [![Build Status](https://travis-ci.org/eldruin/lm75-rs.svg?branch=master)](https://travis-ci.org/eldruin/lm75-rs)
 [![Coverage Status](https://coveralls.io/repos/github/eldruin/lm75-rs/badge.svg?branch=master)](https://coveralls.io/github/eldruin/lm75-rs?branch=master)
-![Maintenance Intention](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 
 This is a platform agnostic Rust driver for the LM75 temperature sensor
 and thermal watchdog, based on the

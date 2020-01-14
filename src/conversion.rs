@@ -1,4 +1,4 @@
-#![deny(unsafe_code)]
+//! Value conversions
 
 pub fn convert_temp_from_register(msb: u8, lsb: u8) -> f32 {
     // msb is stored as two's complement so we can just do this:

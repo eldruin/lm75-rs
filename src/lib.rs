@@ -66,7 +66,7 @@
 //! extern crate lm75;
 //!
 //! use hal::I2cdev;
-//! use lm75::{ Lm75, SlaveAddr };
+//! use lm75::{Lm75, SlaveAddr};
 //!
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
@@ -84,7 +84,7 @@
 //! extern crate lm75;
 //!
 //! use hal::I2cdev;
-//! use lm75::{ Lm75, SlaveAddr };
+//! use lm75::{Lm75, SlaveAddr};
 //!
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
@@ -152,7 +152,7 @@
 //! extern crate lm75;
 //!
 //! use hal::I2cdev;
-//! use lm75::{ Lm75, SlaveAddr };
+//! use lm75::{Lm75, SlaveAddr};
 //!
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
@@ -169,7 +169,7 @@
 //! extern crate lm75;
 //!
 //! use hal::I2cdev;
-//! use lm75::{ Lm75, SlaveAddr };
+//! use lm75::{Lm75, SlaveAddr};
 //!
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
@@ -186,7 +186,7 @@
 //! extern crate lm75;
 //!
 //! use hal::I2cdev;
-//! use lm75::{ Lm75, SlaveAddr };
+//! use lm75::{Lm75, SlaveAddr};
 //!
 //! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
@@ -217,7 +217,7 @@ pub enum SlaveAddr {
     /// Default slave address
     Default,
     /// Alternative slave address providing bit values for A2, A1 and A0
-    Alternative(bool, bool, bool)
+    Alternative(bool, bool, bool),
 }
 
 impl Default for SlaveAddr {
@@ -231,10 +231,9 @@ impl SlaveAddr {
     fn addr(self, default: u8) -> u8 {
         match self {
             SlaveAddr::Default => default,
-            SlaveAddr::Alternative(a2, a1, a0) => default           |
-                                                  ((a2 as u8) << 2) |
-                                                  ((a1 as u8) << 1) |
-                                                    a0 as u8
+            SlaveAddr::Alternative(a2, a1, a0) => {
+                default | ((a2 as u8) << 2) | ((a1 as u8) << 1) | a0 as u8
+            }
         }
     }
 }
@@ -260,7 +259,7 @@ pub enum OsPolarity {
     /// Active low (default)
     ActiveLow,
     /// Active high
-    ActiveHigh
+    ActiveHigh,
 }
 
 /// OS operation mode
@@ -269,7 +268,7 @@ pub enum OsMode {
     /// Comparator (default)
     Comparator,
     /// Interrupt
-    Interrupt
+    Interrupt,
 }
 
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
@@ -277,21 +276,20 @@ const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
 struct Register;
 
 impl Register {
-    const TEMPERATURE   : u8 = 0x00;
-    const CONFIGURATION : u8 = 0x01;
-    const T_HYST        : u8 = 0x02;
-    const T_OS          : u8 = 0x03;
+    const TEMPERATURE: u8 = 0x00;
+    const CONFIGURATION: u8 = 0x01;
+    const T_HYST: u8 = 0x02;
+    const T_OS: u8 = 0x03;
 }
-
 
 struct BitFlags;
 
 impl BitFlags {
-    const SHUTDOWN     : u8 = 0b0000_0001;
-    const COMP_INT     : u8 = 0b0000_0010;
-    const OS_POLARITY  : u8 = 0b0000_0100;
-    const FAULT_QUEUE0 : u8 = 0b0000_1000;
-    const FAULT_QUEUE1 : u8 = 0b0001_0000;
+    const SHUTDOWN: u8 = 0b0000_0001;
+    const COMP_INT: u8 = 0b0000_0010;
+    const OS_POLARITY: u8 = 0b0000_0100;
+    const FAULT_QUEUE0: u8 = 0b0000_1000;
+    const FAULT_QUEUE1: u8 = 0b0001_0000;
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -333,14 +331,14 @@ mod conversion;
 
 impl<I2C, E> Lm75<I2C>
 where
-    I2C: i2c::Write<Error = E>
+    I2C: i2c::Write<Error = E>,
 {
     /// Create new instance of the LM75 device.
     pub fn new(i2c: I2C, address: SlaveAddr) -> Self {
         Lm75 {
             i2c,
             address: address.addr(DEVICE_BASE_ADDRESS),
-            config: Config::default()
+            config: Config::default(),
         }
     }
 
@@ -367,10 +365,26 @@ where
     pub fn set_fault_queue(&mut self, fq: FaultQueue) -> Result<(), Error<E>> {
         let config = self.config;
         match fq {
-            FaultQueue::_1 => self.write_config(config.with_low( BitFlags::FAULT_QUEUE1).with_low( BitFlags::FAULT_QUEUE0)),
-            FaultQueue::_2 => self.write_config(config.with_low( BitFlags::FAULT_QUEUE1).with_high(BitFlags::FAULT_QUEUE0)),
-            FaultQueue::_4 => self.write_config(config.with_high(BitFlags::FAULT_QUEUE1).with_low( BitFlags::FAULT_QUEUE0)),
-            FaultQueue::_6 => self.write_config(config.with_high(BitFlags::FAULT_QUEUE1).with_high(BitFlags::FAULT_QUEUE0)),
+            FaultQueue::_1 => self.write_config(
+                config
+                    .with_low(BitFlags::FAULT_QUEUE1)
+                    .with_low(BitFlags::FAULT_QUEUE0),
+            ),
+            FaultQueue::_2 => self.write_config(
+                config
+                    .with_low(BitFlags::FAULT_QUEUE1)
+                    .with_high(BitFlags::FAULT_QUEUE0),
+            ),
+            FaultQueue::_4 => self.write_config(
+                config
+                    .with_high(BitFlags::FAULT_QUEUE1)
+                    .with_low(BitFlags::FAULT_QUEUE0),
+            ),
+            FaultQueue::_6 => self.write_config(
+                config
+                    .with_high(BitFlags::FAULT_QUEUE1)
+                    .with_high(BitFlags::FAULT_QUEUE0),
+            ),
         }
     }
 
@@ -378,7 +392,7 @@ where
     pub fn set_os_polarity(&mut self, polarity: OsPolarity) -> Result<(), Error<E>> {
         let config = self.config;
         match polarity {
-            OsPolarity::ActiveLow  => self.write_config(config.with_low( BitFlags::OS_POLARITY)),
+            OsPolarity::ActiveLow => self.write_config(config.with_low(BitFlags::OS_POLARITY)),
             OsPolarity::ActiveHigh => self.write_config(config.with_high(BitFlags::OS_POLARITY)),
         }
     }
@@ -387,8 +401,8 @@ where
     pub fn set_os_mode(&mut self, mode: OsMode) -> Result<(), Error<E>> {
         let config = self.config;
         match mode {
-            OsMode::Comparator => self.write_config(config.with_low( BitFlags::COMP_INT)),
-            OsMode::Interrupt  => self.write_config(config.with_high(BitFlags::COMP_INT)),
+            OsMode::Comparator => self.write_config(config.with_low(BitFlags::COMP_INT)),
+            OsMode::Interrupt => self.write_config(config.with_high(BitFlags::COMP_INT)),
         }
     }
 
@@ -425,7 +439,7 @@ where
 
 impl<I2C, E> Lm75<I2C>
 where
-    I2C: i2c::WriteRead<Error = E>
+    I2C: i2c::WriteRead<Error = E>,
 {
     /// Read the temperature from the sensor (celsius).
     pub fn read_temperature(&mut self) -> Result<f32, Error<E>> {
@@ -440,19 +454,35 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use DEVICE_BASE_ADDRESS as ADDR;
 
     #[test]
     fn can_get_default_address() {
         let addr = SlaveAddr::default();
-        assert_eq!(DEVICE_BASE_ADDRESS, addr.addr(DEVICE_BASE_ADDRESS));
+        assert_eq!(ADDR, addr.addr(ADDR));
     }
 
     #[test]
     fn can_generate_alternative_addresses() {
-        assert_eq!(0b100_1000, SlaveAddr::Alternative(false, false, false).addr(DEVICE_BASE_ADDRESS));
-        assert_eq!(0b100_1001, SlaveAddr::Alternative(false, false,  true).addr(DEVICE_BASE_ADDRESS));
-        assert_eq!(0b100_1010, SlaveAddr::Alternative(false,  true, false).addr(DEVICE_BASE_ADDRESS));
-        assert_eq!(0b100_1100, SlaveAddr::Alternative( true, false, false).addr(DEVICE_BASE_ADDRESS));
-        assert_eq!(0b100_1111, SlaveAddr::Alternative( true,  true,  true).addr(DEVICE_BASE_ADDRESS));
+        assert_eq!(
+            0b100_1000,
+            SlaveAddr::Alternative(false, false, false).addr(ADDR)
+        );
+        assert_eq!(
+            0b100_1001,
+            SlaveAddr::Alternative(false, false, true).addr(ADDR)
+        );
+        assert_eq!(
+            0b100_1010,
+            SlaveAddr::Alternative(false, true, false).addr(ADDR)
+        );
+        assert_eq!(
+            0b100_1100,
+            SlaveAddr::Alternative(true, false, false).addr(ADDR)
+        );
+        assert_eq!(
+            0b100_1111,
+            SlaveAddr::Alternative(true, true, true).addr(ADDR)
+        );
     }
 }

@@ -1,70 +1,51 @@
-use embedded_hal_mock as hal;
-use lm75::{Error, FaultQueue, Lm75, OsMode, OsPolarity, SlaveAddr};
-
-const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
-
-struct Register;
-
-impl Register {
-    const TEMPERATURE: u8 = 0x00;
-    const CONFIGURATION: u8 = 0x01;
-    const T_HYST: u8 = 0x02;
-    const T_OS: u8 = 0x03;
-}
-
-fn setup<'a>(data: &'a [u8]) -> Lm75<hal::I2cMock<'a>> {
-    let mut dev = hal::I2cMock::new();
-    dev.set_read_data(&data);
-    Lm75::new(dev, SlaveAddr::default())
-}
-
-fn check_sent_data(sensor: Lm75<hal::I2cMock>, data: &[u8]) {
-    let dev = sensor.destroy();
-    assert_eq!(dev.get_last_address(), Some(DEVICE_BASE_ADDRESS));
-    assert_eq!(dev.get_write_data(), &data[..]);
-}
-
-fn assert_invalid_input_data_error<T, E>(result: Result<T, Error<E>>) {
-    match result {
-        Err(Error::InvalidInputData) => (),
-        _ => panic!("Did not return Error::InvalidInputData."),
-    }
-}
+use embedded_hal_mock::i2c::Transaction as I2cTrans;
+use lm75::{FaultQueue, OsMode, OsPolarity};
+mod common;
+use crate::common::{assert_invalid_input_data_error, destroy, new, Register, ADDR};
 
 #[test]
-fn can_create() {
-    setup(&[0]);
+fn can_create_and_destroy() {
+    let sensor = new(&[]);
+    destroy(sensor);
 }
 
 #[test]
 fn can_enable() {
-    let mut dev = setup(&[0]);
-    dev.enable().unwrap();
-    check_sent_data(dev, &[Register::CONFIGURATION, 0]);
+    let mut sensor = new(&[I2cTrans::write(ADDR, vec![Register::CONFIGURATION, 0])]);
+    sensor.enable().unwrap();
+    destroy(sensor);
 }
 
 #[test]
 fn can_disable() {
-    let mut dev = setup(&[0]);
-    dev.disable().unwrap();
-    check_sent_data(dev, &[Register::CONFIGURATION, 1]);
+    let mut sensor = new(&[I2cTrans::write(ADDR, vec![Register::CONFIGURATION, 1])]);
+    sensor.disable().unwrap();
+    destroy(sensor);
 }
 
 #[test]
 fn can_read_temperature() {
-    let mut dev = setup(&[0b1110_0111, 0b1010_0101]);
-    let temp = dev.read_temperature().unwrap();
-    assert_eq!(-24.5, temp);
-    check_sent_data(dev, &[Register::TEMPERATURE]);
+    let mut sensor = new(&[I2cTrans::write_read(
+        ADDR,
+        vec![Register::TEMPERATURE],
+        vec![0b1110_0111, 0b1010_0101], // -24.5
+    )]);
+    let temp = sensor.read_temperature().unwrap();
+    assert!(-24.4 > temp);
+    assert!(-24.6 < temp);
+    destroy(sensor);
 }
 
 macro_rules! set_config_test {
     ( $test_name:ident, $method:ident, $value:expr, $expected:expr ) => {
         #[test]
         fn $test_name() {
-            let mut dev = setup(&[0]);
-            dev.$method($value).unwrap();
-            check_sent_data(dev, &[Register::CONFIGURATION, $expected]);
+            let mut sensor = new(&[I2cTrans::write(
+                ADDR,
+                vec![Register::CONFIGURATION, $expected],
+            )]);
+            sensor.$method($value).unwrap();
+            destroy(sensor);
         }
     };
 }
@@ -125,9 +106,12 @@ macro_rules! set_temp_test {
       $expected_msb:expr, $expected_lsb:expr ) => {
         #[test]
         fn $test_name() {
-            let mut dev = setup(&[0]);
-            dev.$method($value).unwrap();
-            check_sent_data(dev, &[$register, $expected_msb, $expected_lsb]);
+            let mut sensor = new(&[I2cTrans::write(
+                ADDR,
+                vec![$register, $expected_msb, $expected_lsb],
+            )]);
+            sensor.$method($value).unwrap();
+            destroy(sensor);
         }
     };
 }
@@ -161,8 +145,8 @@ macro_rules! invalid_temp_test {
     ($test_name:ident, $method:ident, $value:expr) => {
         #[test]
         fn $test_name() {
-            let mut dev = setup(&[0]);
-            assert_invalid_input_data_error(dev.$method($value));
+            let mut sensor = new(&[]);
+            assert_invalid_input_data_error(sensor.$method($value));
         }
     };
 }

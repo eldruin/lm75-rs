@@ -1,4 +1,4 @@
-extern crate embedded_hal_mock as hal;
+use embedded_hal_mock as hal;
 use lm75::{Error, FaultQueue, Lm75, OsMode, OsPolarity, SlaveAddr};
 
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;

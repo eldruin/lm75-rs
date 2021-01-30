@@ -20,15 +20,11 @@ include = [
 ]
 edition = "2018"
 
-[badges]
-travis-ci = { repository = "eldruin/lm75-rs", branch = "master" }
-coveralls = { repository = "eldruin/lm75-rs", branch = "master", service = "github" }
-
 [dependencies]
 embedded-hal = "0.2"
 
 [dev-dependencies]
-linux-embedded-hal = "0.2"
+linux-embedded-hal = "0.3"
 embedded-hal-mock = "0.7"
 
 [profile.release]

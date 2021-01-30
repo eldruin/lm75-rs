@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+...
+
+## [0.1.2] - 2021-01-30
+
 ### Added
 - Parameter enums are now copyable and comparable.
 
@@ -31,5 +35,6 @@ This crate is now functionally complete.
 This is the initial release to crates.io. All changes will be documented in
 this CHANGELOG.
 
-[Unreleased]: https://github.com/eldruin/lm75-rs/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/eldruin/lm75-rs/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/eldruin/lm75-rs/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/eldruin/lm75-rs/compare/v0.1.0...v0.1.1

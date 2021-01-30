@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/lm75.svg)](https://crates.io/crates/lm75)
 [![Docs](https://docs.rs/lm75/badge.svg)](https://docs.rs/lm75)
-[![Build Status](https://travis-ci.org/eldruin/lm75-rs.svg?branch=master)](https://travis-ci.org/eldruin/lm75-rs)
+[![Build Status](https://github.com/eldruin/lm75-rs/workflows/Build/badge.svg)](https://github.com/eldruin/lm75-rs/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/eldruin/lm75-rs/badge.svg?branch=master)](https://coveralls.io/github/eldruin/lm75-rs?branch=master)
 
 This is a platform agnostic Rust driver for the LM75 temperature sensor

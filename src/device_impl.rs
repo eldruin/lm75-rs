@@ -1,6 +1,4 @@
-use crate::{
-    conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, SlaveAddr, DEVICE_BASE_ADDRESS,
-};
+use crate::{conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, SlaveAddr, DEVICE_BASE_ADDRESS, Pct2075, SampleRate};
 use embedded_hal::blocking::i2c;
 
 struct Register;
@@ -9,6 +7,7 @@ impl Register {
     const CONFIGURATION: u8 = 0x01;
     const T_HYST: u8 = 0x02;
     const T_OS: u8 = 0x03;
+    const T_IDLE: u8 = 0x04;
 }
 
 struct BitFlags;
@@ -30,6 +29,17 @@ where
             i2c,
             address: address.addr(DEVICE_BASE_ADDRESS),
             config: Config::default(),
+            sample_rate: SampleRate::none(),
+        }
+    }
+
+    /// Create new instance of the PCT2075 device.
+    pub fn new_pct2075(i2c: I2C, address: SlaveAddr) -> Self {
+        Lm75 {
+            i2c,
+            address: address.addr(DEVICE_BASE_ADDRESS),
+            config: Config::default(),
+            sample_rate: SampleRate::default(),
         }
     }
 

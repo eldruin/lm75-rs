@@ -228,6 +228,12 @@ pub enum OsMode {
     Interrupt,
 }
 
+/// Markers
+pub mod marker{
+    pub struct Resolution11Bit(());
+    pub struct Resolution9Bit(());
+}
+
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
 
 #[derive(Debug, Clone, Copy)]
@@ -254,6 +260,16 @@ impl Default for Config {
     }
 }
 
+struct SampleRate{
+    bits: Option<u8>,
+}
+
+impl SampleRate {
+    fn none() -> Self { SampleRate{ bits: None } }
+
+    fn default() -> Self { SampleRate{ bits: Some(1) } }
+}
+
 /// LM75 device driver.
 #[derive(Debug, Default)]
 pub struct Lm75<I2C> {
@@ -263,10 +279,20 @@ pub struct Lm75<I2C> {
     address: u8,
     /// Configuration register status.
     config: Config,
+    sample_rate: SampleRate,
 }
 
 mod conversion;
 mod device_impl;
+mod resolution;
+
+mod private {
+    use crate::marker;
+    pub trait Sealed {}
+
+    impl Sealed for marker::Resolution11Bit {}
+    impl Sealed for marker::Resolution9Bit {}
+}
 
 #[cfg(test)]
 mod tests {

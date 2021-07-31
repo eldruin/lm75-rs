@@ -1,7 +1,8 @@
-use crate::{conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, SlaveAddr, DEVICE_BASE_ADDRESS, Pct2075, SampleRate};
+use crate::{conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, SlaveAddr, DEVICE_BASE_ADDRESS, SampleRate};
 use embedded_hal::blocking::i2c;
 
 struct Register;
+
 impl Register {
     const TEMPERATURE: u8 = 0x00;
     const CONFIGURATION: u8 = 0x01;
@@ -11,6 +12,7 @@ impl Register {
 }
 
 struct BitFlags;
+
 impl BitFlags {
     const SHUTDOWN: u8 = 0b0000_0001;
     const COMP_INT: u8 = 0b0000_0010;
@@ -20,8 +22,8 @@ impl BitFlags {
 }
 
 impl<I2C, E> Lm75<I2C>
-where
-    I2C: i2c::Write<Error = E>,
+    where
+        I2C: i2c::Write<Error=E>,
 {
     /// Create new instance of the LM75 device.
     pub fn new(i2c: I2C, address: SlaveAddr) -> Self {
@@ -139,8 +141,8 @@ where
 }
 
 impl<I2C, E> Lm75<I2C>
-where
-    I2C: i2c::WriteRead<Error = E>,
+    where
+        I2C: i2c::WriteRead<Error=E>,
 {
     /// Read the temperature from the sensor (celsius).
     pub fn read_temperature(&mut self) -> Result<f32, Error<E>> {

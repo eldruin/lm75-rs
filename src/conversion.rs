@@ -10,27 +10,11 @@ pub fn convert_temp_from_register(msb: u8, lsb: u8) -> f32 {
     }
 }
 
-pub fn convert_temp_to_register(temp: f32) -> (u8, u8) {
-    let msb = temp as i8 as u8;
-    if temp < 0.0 {
-        // abs() is not available for bare metal targets at the moment
-        let diff = temp - f32::from(temp as i8);
-        if diff > 0.499 || diff < -0.499 {
-            if msb == 0 {
-                // -0.5 case
-                return (255, 1);
-            } else {
-                return (msb - 1, 1);
-            }
-        } else {
-            return (msb, 0);
-        }
-    }
-    if temp - f32::from(temp as i8) > 0.499 {
-        (msb as u8, 1)
-    } else {
-        (msb as u8, 0)
-    }
+fn convert_temp_to_register(temp: f32) -> (u8, u8) {
+    let int = (temp / 0.125) as i16 as u16;
+    let binary = int << 5;
+    let bytes = binary.to_be_bytes();
+    (bytes[0], bytes[1])
 }
 
 #[cfg(test)]

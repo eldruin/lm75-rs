@@ -1,13 +1,10 @@
 //! Value conversions
 
 pub fn convert_temp_from_register(msb: u8, lsb: u8) -> f32 {
-    // msb is stored as two's complement so we can just do this:
-    let value = msb as i8;
-    if (lsb >> 7) != 0 {
-        f32::from(value) + 0.5
-    } else {
-        f32::from(value)
-    }
+    // msb is stored as two's complement
+    let msb = msb as i8 as f32;
+    let decimal = (lsb >> 5) as f32 * 0.125;
+    msb + decimal
 }
 
 fn convert_temp_to_register(temp: f32) -> (u8, u8) {

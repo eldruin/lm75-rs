@@ -7,7 +7,7 @@ pub fn convert_temp_from_register(msb: u8, lsb: u8) -> f32 {
     msb + decimal
 }
 
-fn convert_temp_to_register(temp: f32) -> (u8, u8) {
+pub fn convert_temp_to_register(temp: f32) -> (u8, u8) {
     let int = (temp / 0.125) as i16 as u16;
     let binary = int << 5;
     let bytes = binary.to_be_bytes();

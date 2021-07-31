@@ -19,6 +19,11 @@ pub fn convert_sample_rate_from_register(byte:u8) -> u16 {
     ( (byte as u16) & 0x1F ) * 100
 }
 
+pub fn convert_sample_rate_to_register(period: u16) -> u8 {
+    // Bits [4:0] hold sample rate value
+    (period / 100) as u8
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

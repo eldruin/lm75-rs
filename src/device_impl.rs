@@ -131,6 +131,17 @@ impl<I2C, E> Lm75<I2C>
             .map_err(Error::I2C)
     }
 
+    /// Set the sensor sample rate period (100ms increments).
+    pub fn set_sample_rate(&mut self, period: u16) -> Result<(), Error<E>> {
+        if period > 3100 || period % 100 != 0 {
+            return Err(Error::InvalidInputData);
+        }
+        let (byte) = conversion::convert_sample_rate_to_register(temperature);
+        self.i2c
+            .write(self.address, &[Register::T_IDLE, byte])
+            .map_err(Error::I2C)
+    }
+
     fn write_config(&mut self, config: Config) -> Result<(), Error<E>> {
         self.i2c
             .write(self.address, &[Register::CONFIGURATION, config.bits])

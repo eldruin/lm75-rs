@@ -152,4 +152,13 @@ impl<I2C, E> Lm75<I2C>
             .map_err(Error::I2C)?;
         Ok(conversion::convert_temp_from_register(data[0], data[1]))
     }
+
+    /// Read the sample rate period from the sensor (ms).
+    pub fn read_sample_rate(&mut self) -> Result<u16, Error<E>> {
+        let mut data = [0; 1];
+        self.i2c
+            .write_read(self.address, &[Register::T_IDLE], &mut data)
+            .map_err(Error::I2C)?;
+        Ok(conversion::convert_sample_rate_from_register(data[0]))
+    }
 }

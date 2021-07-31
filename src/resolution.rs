@@ -9,7 +9,7 @@ pub trait ResolutionSupport<E>: private::Sealed {
 impl<E> ResolutionSupport<E> for marker::Resolution9Bit {
     fn check_value_is_appropriate(value: u16) -> Result<(), Error<E>> {
         if value >= 1 << 9 {
-            Err(Error::InvalidValue)
+            Err(Error::InvalidInputData)
         } else {
             Ok(())
         }
@@ -22,7 +22,7 @@ impl<E> ResolutionSupport<E> for marker::Resolution9Bit {
 impl<E> ResolutionSupport<E> for marker::Resolution11Bit {
     fn check_value_is_appropriate(value: u16) -> Result<(), Error<E>> {
         if value >= 1 << 11 {
-            Err(Error::InvalidValue)
+            Err(Error::InvalidInputData)
         } else {
             Ok(())
         }

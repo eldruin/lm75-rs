@@ -16,7 +16,7 @@ pub fn convert_temp_to_register(temp: f32) -> (u8, u8) {
 
 pub fn convert_sample_rate_from_register(byte:u8) -> u16 {
     // Bits [4:0] hold sample rate value
-    ( byte && 0x1F ) * 100
+    ( (byte as u16) & 0x1F ) * 100
 }
 
 #[cfg(test)]

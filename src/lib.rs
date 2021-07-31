@@ -261,14 +261,17 @@ impl Default for Config {
     }
 }
 
+#[derive(Debug, Clone, Copy)]
 struct SampleRate {
     bits: Option<u8>,
 }
 
+impl Default for SampleRate {
+    fn default() -> Self { SampleRate { bits: Some(1) } }
+}
+
 impl SampleRate {
     fn none() -> Self { SampleRate { bits: None } }
-
-    fn default() -> Self { SampleRate { bits: Some(1) } }
 }
 
 /// LM75 device driver.

@@ -197,6 +197,17 @@ impl SlaveAddr {
     }
 }
 
+impl SlaveAddr {
+    fn addr(self, default: u8) -> u8 {
+        match self {
+            SlaveAddr::Default => default,
+            SlaveAddr::Alternative(a2, a1, a0) => {
+                default | ((a2 as u8) << 2) | ((a1 as u8) << 1) | a0 as u8
+            }
+        }
+    }
+}
+
 /// Fault queue
 ///
 /// Number of consecutive faults necessary to trigger OS condition.
@@ -233,8 +244,8 @@ pub enum OsMode {
 #[derive(Debug, Clone, Copy)]
 /// Device Resolution
 enum Resolution {
-    Mask9bit = 0x7FC,
-    Mask11bit = 0x7FF,
+    Mask9bit = 0b1000_0000,
+    Mask11bit = 0b1110_0000,
 }
 
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
@@ -293,7 +304,6 @@ pub struct Lm75<I2C> {
 
 mod conversion;
 mod device_impl;
-mod resolution;
 
 mod private {
     use crate::marker;

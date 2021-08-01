@@ -127,7 +127,7 @@ impl<I2C, E> Lm75<I2C>
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
         }
-        let (msb, lsb) = conversion::convert_temp_to_register(temperature,self.resolution);
+        let (msb, lsb) = conversion::convert_temp_to_register(temperature, self.resolution);
         self.i2c
             .write(self.address, &[Register::T_HYST, msb, lsb])
             .map_err(Error::I2C)
@@ -166,7 +166,7 @@ impl<I2C, E> Lm75<I2C>
         self.i2c
             .write_read(self.address, &[Register::TEMPERATURE], &mut data)
             .map_err(Error::I2C)?;
-        Ok(conversion::convert_temp_from_register(data[0], data[1],self.resolution))
+        Ok(conversion::convert_temp_from_register(data[0], data[1], self.resolution))
     }
 
     /// Read the sample rate period from the sensor (ms).

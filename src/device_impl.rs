@@ -133,6 +133,9 @@ impl<I2C, E> Lm75<I2C>
 
     /// Set the sensor sample rate period (100ms increments).
     pub fn set_sample_rate(&mut self, period: u16) -> Result<(), Error<E>> {
+        if self.sample_rate.unwrap() == None {
+            return Err(Error::InvalidRegister);
+        }
         if period > 3100 || period % 100 != 0 {
             return Err(Error::InvalidInputData);
         }
@@ -166,6 +169,9 @@ impl<I2C, E> Lm75<I2C>
 
     /// Read the sample rate period from the sensor (ms).
     pub fn read_sample_rate(&mut self) -> Result<u16, Error<E>> {
+        if self.sample_rate.unwrap() == None {
+            return Err(Error::InvalidRegister);
+        }
         let mut data = [0; 1];
         self.i2c
             .write_read(self.address, &[Register::T_IDLE], &mut data)

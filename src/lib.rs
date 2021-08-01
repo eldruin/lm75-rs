@@ -166,6 +166,8 @@ pub enum Error<E> {
     I2C(E),
     /// Invalid input data
     InvalidInputData,
+    /// Register is not implemented
+    InvalidRegister,
 }
 
 /// Possible slave addresses

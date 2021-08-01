@@ -244,6 +244,8 @@ pub enum OsMode {
 #[derive(Debug, Clone, Copy)]
 /// Device Resolution
 enum Resolution {
+    /// 9bit has 0.5 resolution, 11bit has 0.125
+    /// Masks the LSB only
     Mask9bit = 0b1000_0000,
     Mask11bit = 0b1110_0000,
 }
@@ -304,16 +306,6 @@ pub struct Lm75<I2C> {
 
 mod conversion;
 mod device_impl;
-
-mod private {
-    use crate::marker;
-
-    pub trait Sealed {}
-
-    impl Sealed for marker::Resolution11Bit {}
-
-    impl Sealed for marker::Resolution9Bit {}
-}
 
 #[cfg(test)]
 mod tests {

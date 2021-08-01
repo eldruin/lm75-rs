@@ -229,6 +229,8 @@ pub enum OsMode {
     /// Interrupt
     Interrupt,
 }
+
+#[derive(Debug, Clone, Copy)]
 /// Device Resolution
 enum Resolution {
     Mask9bit = 0x7FC,

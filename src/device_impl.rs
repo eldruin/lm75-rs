@@ -1,4 +1,4 @@
-use crate::{conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, SlaveAddr, DEVICE_BASE_ADDRESS, SampleRate};
+use crate::{conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, SlaveAddr, DEVICE_BASE_ADDRESS, SampleRate, Resolution};
 use embedded_hal::blocking::i2c;
 
 struct Register;
@@ -31,6 +31,7 @@ impl<I2C, E> Lm75<I2C>
             i2c,
             address: address.addr(DEVICE_BASE_ADDRESS),
             config: Config::default(),
+            resolution: Resolution::Mask9bit,
             sample_rate: SampleRate::none(),
         }
     }
@@ -41,6 +42,7 @@ impl<I2C, E> Lm75<I2C>
             i2c,
             address: address.addr(DEVICE_BASE_ADDRESS),
             config: Config::default(),
+            resolution: Resolution::Mask11bit,
             sample_rate: SampleRate::default(),
         }
     }

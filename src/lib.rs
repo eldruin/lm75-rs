@@ -229,12 +229,10 @@ pub enum OsMode {
     /// Interrupt
     Interrupt,
 }
-
-/// Markers
-pub mod marker {
-    pub struct Resolution11Bit(());
-
-    pub struct Resolution9Bit(());
+/// Device Resolution
+enum Resolution {
+    Mask9bit = 0x7FC,
+    Mask11bit = 0x7FF,
 }
 
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
@@ -285,6 +283,8 @@ pub struct Lm75<I2C> {
     address: u8,
     /// Configuration register status.
     config: Config,
+    /// Device Resolution
+    resolution: Resolution,
     /// T-Idle Register Contents
     sample_rate: SampleRate,
 }

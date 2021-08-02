@@ -159,8 +159,6 @@
 #![deny(missing_docs, unsafe_code)]
 #![no_std]
 
-use crate::Resolution::Mask9bit;
-
 /// All possible errors in this crate
 #[derive(Debug)]
 pub enum Error<E> {
@@ -175,8 +173,11 @@ pub enum Error<E> {
 /// Possible address pin states
 #[derive(Debug, Clone)]
 pub enum PinState {
+    /// Logical Low Pin State
     Low,
+    /// Logical High Pin State
     High,
+    /// Logical Floating Pin State
     Floating,
 }
 
@@ -268,15 +269,16 @@ pub enum OsMode {
 
 #[derive(Debug, Clone, Copy)]
 /// Device Resolution
-enum Resolution {
+pub enum Resolution {
     /// 9bit has 0.5 resolution, 11bit has 0.125
     /// Masks the LSB only
     Mask9bit = 0b1000_0000,
+    /// Sensors with 11-bit resolution (PCT2075)
     Mask11bit = 0b1110_0000,
 }
 
 impl Default for Resolution {
-    fn default() -> Self { Resoltion { bits: Some(Mask9bit) } }
+    fn default() -> Self { Resolution::Mask9bit }
 }
 
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
@@ -305,7 +307,7 @@ impl Default for Config {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 struct SampleRate {
     bits: Option<u8>,
 }

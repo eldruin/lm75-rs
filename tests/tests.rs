@@ -1,6 +1,8 @@
 use embedded_hal_mock::i2c::Transaction as I2cTrans;
 use lm75::{FaultQueue, OsMode, OsPolarity};
+
 mod common;
+
 use crate::common::{assert_invalid_input_data_error, destroy, new, Register, ADDR};
 
 #[test]

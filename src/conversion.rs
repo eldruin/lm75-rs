@@ -1,11 +1,10 @@
 //! Value conversions
-use crate::Resolution::*;
 use crate::Resolution;
 
 pub fn convert_temp_from_register(msb: u8, lsb: u8, mask: Resolution) -> f32 {
     // msb is stored as two's complement
     let msb = msb as i8 as f32;
-    let decimal = ((lsb & mask) >> 5) as f32 * 0.125;
+    let decimal = ((lsb & mask as u8) >> 5) as f32 * 0.125;
     msb + decimal
 }
 
@@ -13,7 +12,7 @@ pub fn convert_temp_to_register(temp: f32, mask: Resolution) -> (u8, u8) {
     let int = (temp / 0.125) as i16 as u16;
     let binary = int << 5;
     let bytes = binary.to_be_bytes();
-    (bytes[0], bytes[1] & mask)
+    (bytes[0], bytes[1] & mask as u8)
 }
 
 pub fn convert_sample_rate_from_register(byte: u8) -> u16 {

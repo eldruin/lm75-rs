@@ -4,6 +4,7 @@ use lm75::{Error, Lm75, SlaveAddr};
 pub const ADDR: u8 = 0b100_1000;
 
 pub struct Register;
+
 impl Register {
     pub const TEMPERATURE: u8 = 0x00;
     pub const CONFIGURATION: u8 = 0x01;

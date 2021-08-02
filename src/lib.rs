@@ -181,56 +181,33 @@ pub enum PinState {
     Floating,
 }
 
-/// Possible slave addresses
-#[derive(Debug, Clone)]
-pub enum SlaveAddr {
-    /// Default slave address
-    Default,
-    /// Alternative slave address providing bit values for A2, A1 and A0
-    Alternative(bool, bool, bool),
-    /// Allow extra address allowed by PCT2075 sensors
-    Pct2075(PinState, PinState, PinState),
-}
+/// I2C device address
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Address(pub(crate) u8);
 
-impl Default for SlaveAddr {
-    /// Default slave address
+/// Default device
+impl Default for Address {
     fn default() -> Self {
-        SlaveAddr::Default
+        Address(DEVICE_BASE_ADDRESS)
     }
 }
 
-impl SlaveAddr {
-    fn addr(self, default: u8) -> u8 {
-        match self {
-            SlaveAddr::Default => default,
-            SlaveAddr::Alternative(a2, a1, a0) => {
-                default | ((a2 as u8) << 2) | ((a1 as u8) << 1) | a0 as u8
-            }
-            SlaveAddr::Pct2075(a2, a1, a0) => {
-                match (a2, a1, a0) {
-                    (PinState::Floating, PinState::Low, PinState::Low) => 0x70,
-                    (PinState::Floating, PinState::Low, PinState::Floating) => 0x71,
-                    (PinState::Floating, PinState::Low, PinState::High) => 0x72,
-                    (PinState::Floating, PinState::High, PinState::Low) => 0x73,
-                    (PinState::Floating, PinState::High, PinState::Floating) => 0x74,
-                    (PinState::Floating, PinState::High, PinState::High) => 0x75,
-                    (PinState::Floating, PinState::Floating, PinState::Low) => 0x76,
-                    (PinState::Floating, PinState::Floating, PinState::High) => 0x77,
-                    (PinState::Low, PinState::Floating, PinState::Low) => 0x28,
-                    (PinState::Low, PinState::Floating, PinState::High) => 0x29,
-                    (PinState::High, PinState::Floating, PinState::Low) => 0x2A,
-                    (PinState::High, PinState::Floating, PinState::High) => 0x2B,
-                    (PinState::Low, PinState::Low, PinState::Floating) => 0x2C,
-                    (PinState::Low, PinState::High, PinState::Floating) => 0x2D,
-                    (PinState::High, PinState::Low, PinState::Floating) => 0x2E,
-                    (PinState::High, PinState::High, PinState::Floating) => 0x2F,
-                    (PinState::Low, PinState::Floating, PinState::Floating) => 0x35,
-                    (PinState::High, PinState::Floating, PinState::Floating) => 0x36,
-                    (PinState::Floating, PinState::Floating, PinState::Floating) => 0x37,
-                    _ => default,
-                }
-            }
-        }
+/// Support custom (integer) addresses
+impl From<u8> for Address {
+    fn from(a: u8) -> Self {
+        Address(a)
+    }
+}
+
+/// Compute device address from address bits where bits are not floating
+impl From<(bool, bool, bool)> for Address {
+    fn from(a: (bool, bool, bool)) -> Self {
+        Address(
+            DEVICE_BASE_ADDRESS
+                | ((a.0 as u8) << 2)
+                | ((a.1 as u8) << 1)
+                | a.2 as u8,
+        )
     }
 }
 

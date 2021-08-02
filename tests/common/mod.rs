@@ -1,5 +1,5 @@
 use embedded_hal_mock::i2c::{Mock as I2cMock, Transaction as I2cTrans};
-use lm75::{Error, Lm75, SlaveAddr};
+use lm75::{Error, Lm75, SlaveAddr, Resolution};
 
 pub const ADDR: u8 = 0b100_1000;
 
@@ -10,9 +10,14 @@ impl Register {
     pub const CONFIGURATION: u8 = 0x01;
     pub const T_HYST: u8 = 0x02;
     pub const T_OS: u8 = 0x03;
+    const T_IDLE: u8 = 0x04;
 }
 
 pub fn new(transactions: &[I2cTrans]) -> Lm75<I2cMock> {
+    Lm75::new(I2cMock::new(transactions), SlaveAddr::default())
+}
+
+pub fn new_pct2075(transactions: &[I2cTrans]) -> Lm75<I2cMock> {
     Lm75::new(I2cMock::new(transactions), SlaveAddr::default())
 }
 

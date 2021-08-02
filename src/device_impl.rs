@@ -26,10 +26,11 @@ impl<I2C, E> Lm75<I2C>
         I2C: i2c::Write<Error=E>,
 {
     /// Create new instance of the LM75 device.
-    pub fn new(i2c: I2C, address: Address) -> Self {
+    pub fn new<A: Into<Address>>(i2c: I2C, address: A) -> Self {
+        let a = address.into();
         Lm75 {
             i2c,
-            address: address.default(),
+            address: a.0,
             config: Config::default(),
             resolution: Resolution::Mask9bit,
             sample_rate: SampleRate::none(),
@@ -37,10 +38,11 @@ impl<I2C, E> Lm75<I2C>
     }
 
     /// Create new instance of the PCT2075 device.
-    pub fn new_pct2075(i2c: I2C, address: Address) -> Self {
+    pub fn new_pct2075<A: Into<Address>>(i2c: I2C, address: A) -> Self {
+        let a = address.into();
         Lm75 {
             i2c,
-            address: address.default(),
+            address: a.0,
             config: Config::default(),
             resolution: Resolution::Mask11bit,
             sample_rate: SampleRate::default(),

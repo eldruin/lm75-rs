@@ -322,7 +322,7 @@ mod tests {
 
     #[test]
     fn can_get_default_address() {
-        let addr = SlaveAddr::default();
+        let addr = Address::default();
         assert_eq!(ADDR, addr.addr(ADDR));
     }
 
@@ -330,23 +330,23 @@ mod tests {
     fn can_generate_alternative_addresses() {
         assert_eq!(
             0b100_1000,
-            SlaveAddr::Alternative(false, false, false).addr(ADDR)
+            Address::from(false, false, false)
         );
         assert_eq!(
             0b100_1001,
-            SlaveAddr::Alternative(false, false, true).addr(ADDR)
+            Address::from(false, false, true)
         );
         assert_eq!(
             0b100_1010,
-            SlaveAddr::Alternative(false, true, false).addr(ADDR)
+            Address::from(false, true, false)
         );
         assert_eq!(
             0b100_1100,
-            SlaveAddr::Alternative(true, false, false).addr(ADDR)
+            Address::from(true, false, false)
         );
         assert_eq!(
             0b100_1111,
-            SlaveAddr::Alternative(true, true, true).addr(ADDR)
+            Address::from(true, true, true)
         );
     }
 }

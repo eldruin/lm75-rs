@@ -141,7 +141,7 @@ impl<I2C, E> Lm75<I2C>
         if period > 3100 || period % 100 != 0 {
             return Err(Error::InvalidInputData);
         }
-        let (byte) = conversion::convert_sample_rate_to_register(temperature);
+        let (byte) = conversion::convert_sample_rate_to_register(period);
         self.i2c
             .write(self.address, &[Register::T_IDLE, byte])
             .map_err(Error::I2C)

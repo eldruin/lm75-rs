@@ -159,6 +159,8 @@
 #![deny(missing_docs, unsafe_code)]
 #![no_std]
 
+use crate::Resolution::Mask9bit;
+
 /// All possible errors in this crate
 #[derive(Debug)]
 pub enum Error<E> {
@@ -231,13 +233,6 @@ impl SlaveAddr {
     }
 }
 
-/// Support custom addresses
-impl From<u8> for SlaveAddr {
-    fn from(a: u8) -> Self {
-        Address(a)
-    }
-}
-
 /// Fault queue
 ///
 /// Number of consecutive faults necessary to trigger OS condition.
@@ -278,6 +273,10 @@ enum Resolution {
     /// Masks the LSB only
     Mask9bit = 0b1000_0000,
     Mask11bit = 0b1110_0000,
+}
+
+impl Default for Resolution {
+    fn default() -> Self { Resoltion { bits: Some(Mask9bit) } }
 }
 
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;

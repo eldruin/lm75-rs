@@ -318,35 +318,35 @@ mod device_impl;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::DEVICE_BASE_ADDRESS as ADDR;
 
-    #[test]
-    fn can_get_default_address() {
-        let addr = Address::default();
-        assert_eq!(ADDR, addr.addr(ADDR));
+    fn default_address_matches_alternative_all_false() {
+        assert_eq!(
+            Address::default(),
+            Address::from((false, false, false))
+        )
     }
 
     #[test]
     fn can_generate_alternative_addresses() {
         assert_eq!(
-            0b100_1000,
-            Address::from(false, false, false)
+            Address::from(0b100_1000),
+            Address::from((false, false, false))
         );
         assert_eq!(
-            0b100_1001,
-            Address::from(false, false, true)
+            Address::from(0b100_1001),
+            Address::from((false, false, true))
         );
         assert_eq!(
-            0b100_1010,
-            Address::from(false, true, false)
+            Address::from(0b100_1010),
+            Address::from((false, true, false))
         );
         assert_eq!(
-            0b100_1100,
-            Address::from(true, false, false)
+            Address::from(0b100_1100),
+            Address::from((true, false, false))
         );
         assert_eq!(
-            0b100_1111,
-            Address::from(true, true, true)
+            Address::from(0b100_1111),
+            Address::from((true, true, true))
         );
     }
 }

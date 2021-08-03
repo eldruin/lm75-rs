@@ -10,7 +10,7 @@ impl Register {
     pub const CONFIGURATION: u8 = 0x01;
     pub const T_HYST: u8 = 0x02;
     pub const T_OS: u8 = 0x03;
-    const T_IDLE: u8 = 0x04;
+    pub const T_IDLE: u8 = 0x04;
 }
 
 pub fn new(transactions: &[I2cTrans]) -> Lm75<I2cMock> {
@@ -28,6 +28,13 @@ pub fn destroy(sensor: Lm75<I2cMock>) {
 pub fn assert_invalid_input_data_error<T, E>(result: Result<T, Error<E>>) {
     match result {
         Err(Error::InvalidInputData) => (),
+        _ => panic!("Did not return Error::InvalidInputData."),
+    }
+}
+
+pub fn assert_invalid_register_error<T, E>(result: Result<T, Error<E>>) {
+    match result {
+        Err(Error::InvalidRegister) => (),
         _ => panic!("Did not return Error::InvalidInputData."),
     }
 }

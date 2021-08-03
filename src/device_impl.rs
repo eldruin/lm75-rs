@@ -11,7 +11,7 @@ impl Register {
     const T_IDLE: u8 = 0x04;
 }
 
-struct BitFlags;
+pub struct BitFlags;
 
 impl BitFlags {
     const SHUTDOWN: u8 = 0b0000_0001;
@@ -19,6 +19,7 @@ impl BitFlags {
     const OS_POLARITY: u8 = 0b0000_0100;
     const FAULT_QUEUE0: u8 = 0b0000_1000;
     const FAULT_QUEUE1: u8 = 0b0001_0000;
+    pub const SAMPLE_RATE_MASK: u8 = 0b0001_1111;
 }
 
 impl<I2C, E> Lm75<I2C>
@@ -32,7 +33,6 @@ impl<I2C, E> Lm75<I2C>
             i2c,
             address: a.0,
             config: Config::default(),
-            resolution: Resolution::Mask9bit,
             sample_rate: SampleRate::none(),
         }
     }
@@ -44,7 +44,6 @@ impl<I2C, E> Lm75<I2C>
             i2c,
             address: a.0,
             config: Config::default(),
-            resolution: Resolution::Mask11bit,
             sample_rate: SampleRate::default(),
         }
     }

@@ -134,7 +134,10 @@ impl<I2C, E> Lm75<I2C>
             .map_err(Error::I2C)
     }
 
-    /// Set the sensor sample rate period (100ms increments).
+    /// Set the sensor sample rate period in milliseconds (100ms increments).
+    ///
+    /// For values outside of the range `[100 - 3100]` or those not a multiple of 100,
+    /// `Error::InvalidInputData will be returned
     pub fn set_sample_rate(&mut self, period: u16) -> Result<(), Error<E>> {
         if self.sample_rate.bits.is_none() {
             return Err(Error::InvalidRegister);

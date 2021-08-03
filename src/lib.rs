@@ -192,17 +192,6 @@ pub enum Error<E> {
     InvalidRegister,
 }
 
-/// Possible address pin states
-#[derive(Debug, Clone)]
-pub enum PinState {
-    /// Logical Low Pin State
-    Low,
-    /// Logical High Pin State
-    High,
-    /// Logical Floating Pin State
-    Floating,
-}
-
 /// I2C device address
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Address(pub(crate) u8);

@@ -11,8 +11,9 @@ pub fn convert_temp_from_register(msb: u8, lsb: u8, mask: Resolution) -> f32 {
 pub fn convert_temp_to_register(temp: f32, mask: Resolution) -> (u8, u8) {
     let int = (temp / 0.125) as i16 as u16;
     let binary = int << 5;
-    let bytes = binary.to_be_bytes();
-    (bytes[0], bytes[1] & mask as u8)
+    let msb = (binary >> 8) as u8;
+    let lsb = (binary & 0xFF) as u8;
+    (msb, lsb)
 }
 
 pub fn convert_sample_rate_from_register(byte: u8) -> u16 {

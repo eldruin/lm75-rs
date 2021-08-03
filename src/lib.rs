@@ -181,6 +181,8 @@
 #![deny(missing_docs, unsafe_code)]
 #![no_std]
 
+use core::marker::PhantomData;
+
 /// All possible errors in this crate
 #[derive(Debug)]
 pub enum Error<E> {
@@ -188,8 +190,6 @@ pub enum Error<E> {
     I2C(E),
     /// Invalid input data
     InvalidInputData,
-    /// Register is not implemented
-    InvalidRegister,
 }
 
 /// I2C device address
@@ -287,23 +287,29 @@ impl Default for Config {
 
 /// LM75 device driver.
 #[derive(Debug, Default)]
-pub struct Lm75<I2C> {
+pub struct Lm75<I2C, SR> {
     /// The concrete I²C device implementation.
     i2c: I2C,
     /// The I²C device address.
     address: u8,
     /// Configuration register status.
     config: Config,
-}
-
-pub mod marker{
-    pub struct Resolution11Bit(());
-    pub struct Resolution9Bit(());
+    /// Device Resolution
+    resolution: marker,
+    /// Sample Rate,
+    _sample_rate: PhantomData<SR>
 }
 
 mod conversion;
 mod device_impl;
 mod resolution;
+mod sample_rate;
+
+pub mod marker{
+    pub struct Resolution11Bit(());
+    pub struct Resolution9Bit(());
+    pub struct TemperatureIdleRegister(());
+}
 
 
 pub mod private {
@@ -313,6 +319,8 @@ pub mod private {
 
     impl Sealed for marker::Resolution11Bit {}
     impl Sealed for marker::Resolution9Bit {}
+    impl Sealed for marker::TemperatureIdleRegister {}
+
 }
 
 #[cfg(test)]

@@ -1,6 +1,5 @@
 //! Value conversions
 use crate::Resolution;
-use crate::device_impl::BitFlags;
 
 pub fn convert_temp_from_register(msb: u8, lsb: u8, mask: Resolution) -> f32 {
     // msb is stored as two's complement
@@ -15,16 +14,6 @@ pub fn convert_temp_to_register(temp: f32, mask: Resolution) -> (u8, u8) {
     let msb = (binary >> 8) as u8;
     let lsb = (binary & 0xFF) as u8;
     (msb, lsb)
-}
-
-pub fn convert_sample_rate_from_register(byte: u8) -> u16 {
-    // Bits [4:0] hold sample rate value
-    ((byte as u16) & BitFlags::SAMPLE_RATE_MASK) * 100
-}
-
-pub fn convert_sample_rate_to_register(period: u16) -> u8 {
-    // Bits [4:0] hold sample rate value
-    (period / 100) as u8
 }
 
 #[cfg(test)]

@@ -1,5 +1,7 @@
-use crate::{conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, Address, SampleRate, Resolution};
+use crate::{conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, Address, marker};
+use core::marker::PhantomData;
 use embedded_hal::blocking::i2c;
+use crate::sample_rate::SampleRateSupport;
 
 struct Register;
 
@@ -33,6 +35,8 @@ impl<I2C, E> Lm75<I2C>
             i2c,
             address: a.0,
             config: Config::default(),
+            resolution: marker::Resolution9Bit,
+            _sample_rate: PhantomData,
         }
     }
 
@@ -43,6 +47,8 @@ impl<I2C, E> Lm75<I2C>
             i2c,
             address: a.0,
             config: Config::default(),
+            resolution: marker::Resolution11Bit,
+            _sample_rate: marker::TemperatureIdleRegister,
         }
     }
 
@@ -137,13 +143,6 @@ impl<I2C, E> Lm75<I2C>
     /// For values outside of the range `[100 - 3100]` or those not a multiple of 100,
     /// `Error::InvalidInputData will be returned
     pub fn set_sample_rate(&mut self, period: u16) -> Result<(), Error<E>> {
-        if self.sample_rate.bits.is_none() {
-            return Err(Error::InvalidRegister);
-        }
-        if period > 3100 || period % 100 != 0 {
-            return Err(Error::InvalidInputData);
-        }
-        let byte = conversion::convert_sample_rate_to_register(period);
         self.i2c
             .write(self.address, &[Register::T_IDLE, byte])
             .map_err(Error::I2C)

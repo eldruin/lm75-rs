@@ -285,19 +285,6 @@ impl Default for Config {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
-struct SampleRate {
-    bits: Option<u8>,
-}
-
-impl Default for SampleRate {
-    fn default() -> Self { SampleRate { bits: Some(1) } }
-}
-
-impl SampleRate {
-    fn none() -> Self { SampleRate { bits: None } }
-}
-
 /// LM75 device driver.
 #[derive(Debug, Default)]
 pub struct Lm75<I2C> {
@@ -307,9 +294,6 @@ pub struct Lm75<I2C> {
     address: u8,
     /// Configuration register status.
     config: Config,
-
-    /// T-Idle Register Contents
-    sample_rate: SampleRate,
 }
 
 pub mod marker{

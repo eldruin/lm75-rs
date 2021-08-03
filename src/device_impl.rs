@@ -33,7 +33,6 @@ impl<I2C, E> Lm75<I2C>
             i2c,
             address: a.0,
             config: Config::default(),
-            sample_rate: SampleRate::none(),
         }
     }
 
@@ -44,7 +43,6 @@ impl<I2C, E> Lm75<I2C>
             i2c,
             address: a.0,
             config: Config::default(),
-            sample_rate: SampleRate::default(),
         }
     }
 

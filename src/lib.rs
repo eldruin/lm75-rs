@@ -287,7 +287,7 @@ impl Default for Config {
 
 /// LM75 device driver.
 #[derive(Debug, Default)]
-pub struct Lm75<I2C, SR> {
+pub struct Lm75<I2C> {
     /// The concrete I²C device implementation.
     i2c: I2C,
     /// The I²C device address.
@@ -297,7 +297,7 @@ pub struct Lm75<I2C, SR> {
     /// Device Resolution
     resolution: marker,
     /// Sample Rate,
-    _sample_rate: PhantomData<SR>
+    _sample_rate: PhantomData,
 }
 
 mod conversion;
@@ -305,12 +305,13 @@ mod device_impl;
 mod resolution;
 mod sample_rate;
 
-pub mod marker{
+pub mod marker {
     pub struct Resolution11Bit(());
+
     pub struct Resolution9Bit(());
+
     pub struct TemperatureIdleRegister(());
 }
-
 
 pub mod private {
     use crate::marker;
@@ -318,9 +319,10 @@ pub mod private {
     pub trait Sealed {}
 
     impl Sealed for marker::Resolution11Bit {}
-    impl Sealed for marker::Resolution9Bit {}
-    impl Sealed for marker::TemperatureIdleRegister {}
 
+    impl Sealed for marker::Resolution9Bit {}
+
+    impl Sealed for marker::TemperatureIdleRegister {}
 }
 
 #[cfg(test)]

@@ -88,18 +88,4 @@ mod tests {
         assert_eq!((0b0111_1111, 0b1000_0000), convert_temp_to_register(127.5, Mask11bit));
         assert_eq!((0b1000_0000, 0b0000_0000), convert_temp_to_register(-128.0, Mask11bit));
     }
-
-    #[test]
-    fn can_convert_sample_rate_from_register() {
-        assert_eq!(convert_sample_rate_from_register(0b0001_1111), 3100);
-        assert_eq!(convert_sample_rate_from_register(0b1111_0000), 1600);
-        assert_eq!(convert_sample_rate_from_register(0b0000_0001), 100);
-    }
-
-    #[test]
-    fn can_convert_sample_rate_to_register() {
-        assert_eq!(convert_sample_rate_to_register(3100), 0b0001_1111);
-        assert_eq!(convert_sample_rate_to_register(1600), 0b0001_0000);
-        assert_eq!(convert_sample_rate_to_register(100), 0b0000_0001);
-    }
 }

@@ -63,10 +63,10 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use lm75::{Lm75, SlaveAddr};
+//! use lm75::{Lm75, Address};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let address = SlaveAddr::default();
+//! let address = Address::default();
 //! let mut sensor = Lm75::new(dev, address);
 //! let temp_celsius = sensor.read_temperature().unwrap();
 //! println!("Temperature: {}ºC", temp_celsius);
@@ -76,14 +76,25 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use lm75::{Lm75, SlaveAddr};
+//! use lm75::{Lm75, Address};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let (a2, a1, a0) = (false, false, true);
-//! let address = SlaveAddr::Alternative(a2, a1, a0);
+//! let address = Address::from((a2,a1,a0));
 //! let mut sensor = Lm75::new(dev, address);
 //! ```
 //!
+//! ### Provide a custom address for PCT2075 only
+//!
+//! ```no_run
+//! use linux_embedded_hal::I2cdev;
+//! use lm75::{Lm75, Address};
+//!
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
+//! let all_pins_floating = 0x37; // 0b011_0111
+//! let address = Address::from(all_pins_floating);
+//! let mut sensor = Lm75::new_pct2075(dev, address);
+//! ```
 //! ### Set the fault queue
 //!
 //! This is the number of consecutive faults necessary to trigger
@@ -91,10 +102,10 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use lm75::{Lm75, SlaveAddr, FaultQueue};
+//! use lm75::{Lm75, Address, FaultQueue};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let mut sensor = Lm75::new(dev, SlaveAddr::default());
+//! let mut sensor = Lm75::new(dev, Address::default());
 //! sensor.set_fault_queue(FaultQueue::_4).unwrap();
 //! ```
 //!
@@ -102,10 +113,10 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use lm75::{Lm75, SlaveAddr, OsPolarity};
+//! use lm75::{Lm75, Address, OsPolarity};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let mut sensor = Lm75::new(dev, SlaveAddr::default());
+//! let mut sensor = Lm75::new(dev, Address::default());
 //! sensor.set_os_polarity(OsPolarity::ActiveHigh).unwrap();
 //! ```
 //!
@@ -113,10 +124,10 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use lm75::{Lm75, SlaveAddr, OsMode};
+//! use lm75::{Lm75, Address, OsMode};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let mut sensor = Lm75::new(dev, SlaveAddr::default());
+//! let mut sensor = Lm75::new(dev, Address::default());
 //! sensor.set_os_mode(OsMode::Interrupt).unwrap();
 //! ```
 //!
@@ -124,10 +135,10 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use lm75::{Lm75, SlaveAddr};
+//! use lm75::{Lm75, Address};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let mut sensor = Lm75::new(dev, SlaveAddr::default());
+//! let mut sensor = Lm75::new(dev, Address::default());
 //! let temp_celsius = 50.0;
 //! sensor.set_os_temperature(temp_celsius).unwrap();
 //! ```
@@ -136,22 +147,33 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use lm75::{Lm75, SlaveAddr};
+//! use lm75::{Lm75, Address};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let mut sensor = Lm75::new(dev, SlaveAddr::default());
+//! let mut sensor = Lm75::new(dev, Address::default());
 //! let temp_celsius = 40.0;
 //! sensor.set_hysteresis_temperature(temp_celsius).unwrap();
+//! ```
+//! ### Set the Sample Rate on the PCT2075 only
+//!
+//! ```no_run
+//! use linux_embedded_hal::I2cdev;
+//! use lm75::{Lm75, Address};
+//!
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
+//! let mut sensor = Lm75::new_pct2075(dev, Address::default());
+//! let period = 1500; //in milliseconds, max = 3100, default 100
+//! sensor.set_sample_rate(period).unwrap();
 //! ```
 //!
 //! ### Enable / disable the sensor
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use lm75::{Lm75, SlaveAddr};
+//! use lm75::{Lm75, Address};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let mut sensor = Lm75::new(dev, SlaveAddr::default());
+//! let mut sensor = Lm75::new(dev, Address::default());
 //! sensor.disable().unwrap(); // shutdown
 //! sensor.enable().unwrap();
 //! ```

@@ -319,6 +319,7 @@ mod device_impl;
 mod tests {
     use super::*;
 
+    #[test]
     fn default_address_matches_alternative_all_false() {
         assert_eq!(
             Address::default(),

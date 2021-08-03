@@ -11,11 +11,11 @@ impl<E> ResolutionSupport<E> for marker::Resolution9Bit {
         if value >= 1 << 9 {
             Err(Error::InvalidInputData)
         } else {
-            ok(())
+            Ok(())
         }
     }
     fn get_value_for_i2c(value: u16) -> [u8;2] {
-        [(value >> 5) as u8, (value & oxff) as u8]
+        [(value >> 5) as u8, (value & 0xff) as u8]
     }
 }
 
@@ -24,10 +24,10 @@ impl<E> ResolutionSupport<E> for marker::Resolution11Bit {
         if value >= 1 << 11 {
             Err(Error::InvalidInputData)
         } else {
-            ok(())
+            Ok(())
         }
     }
     fn get_value_for_i2c(value: u16) -> [u8;2] {
-        [(value >> 7) as u8, (value & oxff) as u8]
+        [(value >> 7) as u8, (value & 0xff) as u8]
     }
 }

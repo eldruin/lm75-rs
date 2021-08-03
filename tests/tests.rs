@@ -161,7 +161,7 @@ set_temp_test!(
     0
 );
 
-macro_rules! invalid_data_test {
+macro_rules! invalid_temp_test {
     ($test_name:ident, $method:ident, $value:expr) => {
         #[test]
         fn $test_name() {
@@ -171,11 +171,8 @@ macro_rules! invalid_data_test {
     };
 }
 
-invalid_data_test!(set_os_temperature_too_low, set_os_temperature, -55.5);
-invalid_data_test!(set_os_temperature_too_high, set_os_temperature, 125.5);
-
-invalid_data_test!(set_sample_rate_too_high, set_sample_rate, 4000);
-invalid_data_test!(set_non_multiple_sample_rate, set_sample_rate, 1234);
+invalid_temp_test!(set_os_temperature_too_low, set_os_temperature, -55.5);
+invalid_temp_test!(set_os_temperature_too_high, set_os_temperature, 125.5);
 
 set_temp_test!(
     can_set_hyst_temp_0_5,
@@ -202,12 +199,12 @@ set_temp_test!(
     0
 );
 
-invalid_data_test!(
+invalid_temp_test!(
     set_hyst_temperature_too_low,
     set_hysteresis_temperature,
     -55.5
 );
-invalid_data_test!(
+invalid_temp_test!(
     set_hyst_temperature_too_high,
     set_hysteresis_temperature,
     125.5
@@ -249,6 +246,19 @@ set_sample_rate_test!(
     Register::T_IDLE,
     0b0000_0001
 );
+
+macro_rules! invalid_sample_rate_test {
+    ($test_name:ident, $method:ident, $value:expr) => {
+        #[test]
+        fn $test_name() {
+            let mut sensor = new_pct2075(&[]);
+            assert_invalid_input_data_error(sensor.$method($value));
+        }
+    };
+}
+
+invalid_sample_rate_test!(set_sample_rate_too_high, set_sample_rate, 4000);
+invalid_sample_rate_test!(set_non_multiple_sample_rate, set_sample_rate, 1234);
 
 macro_rules! invalid_register_write {
     ( $test_name:ident, $method:ident, $value:expr, $register:expr,

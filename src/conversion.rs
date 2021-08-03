@@ -83,7 +83,7 @@ mod tests {
         assert_eq!((0b0111_1111, 0b1000_0000), convert_temp_to_register(127.5, Mask9bit));
         assert_eq!((0b1000_0000, 0b0000_0000), convert_temp_to_register(-128.0, Mask9bit));
 
-        assert_eq!((0b0000_0010, 0b1100_0000), convert_temp_to_register(2.4, Mask11bit));
+        assert_eq!((0b0000_0010, 0b0110_0000), convert_temp_to_register(2.4, Mask11bit));
         assert_eq!((0b0000_0010, 0b1000_0000), convert_temp_to_register(2.6, Mask11bit));
         assert_eq!((0b1111_1110, 0b0000_0000), convert_temp_to_register(-2.0, Mask11bit));
         assert_eq!((0b1111_1101, 0b1000_0000), convert_temp_to_register(-2.6, Mask11bit));

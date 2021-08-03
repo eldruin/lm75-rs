@@ -35,6 +35,6 @@ pub fn assert_invalid_input_data_error<T, E>(result: Result<T, Error<E>>) {
 pub fn assert_invalid_register_error<T, E>(result: Result<T, Error<E>>) {
     match result {
         Err(Error::InvalidRegister) => (),
-        _ => panic!("Did not return Error::InvalidInputData."),
+        _ => panic!("Did not return Error::InvalidRegister."),
     }
 }

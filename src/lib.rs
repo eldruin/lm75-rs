@@ -255,10 +255,6 @@ pub enum OsMode {
     Interrupt,
 }
 
-impl Default for Resolution {
-    fn default() -> Self { Resolution::Mask9bit }
-}
-
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
 
 #[derive(Debug, Clone, Copy)]
@@ -285,19 +281,26 @@ impl Default for Config {
     }
 }
 
+pub mod ic {
+    /// LM75 Marker
+    pub struct Lm75;
+
+    /// PCT2075 Marker
+    pub struct Pct2075;
+
+}
+
 /// LM75 device driver.
 #[derive(Debug, Default)]
-pub struct Lm75<I2C> {
+pub struct Xx75<I2C, IC> {
     /// The concrete I²C device implementation.
     i2c: I2C,
     /// The I²C device address.
     address: u8,
     /// Configuration register status.
     config: Config,
-    /// Device Resolution
-    resolution: marker,
-    /// Sample Rate,
-    _sample_rate: PhantomData,
+    /// Device Marker
+    _ic: PhantomData<IC>
 }
 
 mod conversion;
@@ -305,24 +308,14 @@ mod device_impl;
 mod resolution;
 mod sample_rate;
 
-pub mod marker {
-    pub struct Resolution11Bit(());
-
-    pub struct Resolution9Bit(());
-
-    pub struct TemperatureIdleRegister(());
-}
-
 pub mod private {
-    use crate::marker;
+    use crate::ic;
 
     pub trait Sealed {}
 
-    impl Sealed for marker::Resolution11Bit {}
+    impl Sealed for ic::Lm75 {}
 
-    impl Sealed for marker::Resolution9Bit {}
-
-    impl Sealed for marker::TemperatureIdleRegister {}
+    impl Sealed for ic::Pct2075 {}
 }
 
 #[cfg(test)]

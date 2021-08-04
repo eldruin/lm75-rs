@@ -1,4 +1,4 @@
-use crate::{conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, Address, marker};
+use crate::{conversion, Config, Error, FaultQueue, Xx75, OsMode, OsPolarity, Address, marker};
 use core::marker::PhantomData;
 use embedded_hal::blocking::i2c;
 use crate::sample_rate::SampleRateSupport;
@@ -24,7 +24,7 @@ impl BitFlags {
     pub const SAMPLE_RATE_MASK: u8 = 0b0001_1111;
 }
 
-impl<I2C, E> Lm75<I2C>
+impl<I2C, E> Xx75<I2C,SR>
     where
         I2C: i2c::Write<Error=E>,
 {
@@ -41,7 +41,7 @@ impl<I2C, E> Lm75<I2C>
     }
 
     /// Create new instance of the PCT2075 device.
-    pub fn new_pct2075<A: Into<Address>>(i2c: I2C, address: A) -> Self {
+    pub fn new_pct2075<A: Into<Address>, SR>(i2c: I2C, address: A, ) -> Self {
         let a = address.into();
         Lm75 {
             i2c,

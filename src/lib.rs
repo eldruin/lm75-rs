@@ -306,7 +306,7 @@ pub struct Xx75<I2C, IC> {
 mod conversion;
 mod device_impl;
 mod resolution;
-mod sample_rate;
+mod markers;
 
 pub mod private {
     use crate::ic;

@@ -1,7 +1,7 @@
 use crate::{conversion, Config, Error, FaultQueue, Xx75, OsMode, OsPolarity, Address, marker};
 use core::marker::PhantomData;
 use embedded_hal::blocking::i2c;
-use crate::sample_rate::SampleRateSupport;
+use crate::markers::SampleRateSupport;
 
 struct Register;
 

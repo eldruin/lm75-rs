@@ -24,31 +24,29 @@ impl BitFlags {
     pub const SAMPLE_RATE_MASK: u8 = 0b0001_1111;
 }
 
-impl<I2C, E> Xx75<I2C,SR>
+impl<I2C, IC, E> Xx75<I2C,SR>
     where
         I2C: i2c::Write<Error=E>,
 {
     /// Create new instance of the LM75 device.
-    pub fn new<A: Into<Address>>(i2c: I2C, address: A) -> Self {
+    pub fn new<A: Into<Address>, IC>(i2c: I2C, address: A) -> Self {
         let a = address.into();
         Lm75 {
             i2c,
             address: a.0,
             config: Config::default(),
-            resolution: marker::Resolution9Bit,
-            _sample_rate: PhantomData,
+            _ic: PhantomData
         }
     }
 
     /// Create new instance of the PCT2075 device.
-    pub fn new_pct2075<A: Into<Address>, SR>(i2c: I2C, address: A, ) -> Self {
+    pub fn new_pct2075<A: Into<Address>, IC>(i2c: I2C, address: A) -> Self {
         let a = address.into();
         Lm75 {
             i2c,
             address: a.0,
             config: Config::default(),
-            resolution: marker::Resolution11Bit,
-            _sample_rate: marker::TemperatureIdleRegister,
+            _ic: PhantomData
         }
     }
 
@@ -121,7 +119,7 @@ impl<I2C, E> Xx75<I2C,SR>
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
         }
-        let (msb, lsb) = conversion::convert_temp_to_register(temperature, self.resolution);
+        let (msb, lsb) = conversion::convert_temp_to_register(temperature);
         self.i2c
             .write(self.address, &[Register::T_OS, msb, lsb])
             .map_err(Error::I2C)
@@ -132,7 +130,7 @@ impl<I2C, E> Xx75<I2C,SR>
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
         }
-        let (msb, lsb) = conversion::convert_temp_to_register(temperature, self.resolution);
+        let (msb, lsb) = conversion::convert_temp_to_register(temperature);
         self.i2c
             .write(self.address, &[Register::T_HYST, msb, lsb])
             .map_err(Error::I2C)
@@ -142,7 +140,7 @@ impl<I2C, E> Xx75<I2C,SR>
     ///
     /// For values outside of the range `[100 - 3100]` or those not a multiple of 100,
     /// `Error::InvalidInputData will be returned
-    pub fn set_sample_rate(&mut self, period: u16) -> Result<(), Error<E>> {
+    pub fn set_sample_rate(&mut self) -> Result<(), Error<E>> {
         self.i2c
             .write(self.address, &[Register::T_IDLE, byte])
             .map_err(Error::I2C)
@@ -157,7 +155,7 @@ impl<I2C, E> Xx75<I2C,SR>
     }
 }
 
-impl<I2C, E> Lm75<I2C>
+impl<I2C, IC, E> Xx75<I2C, IC>
     where
         I2C: i2c::WriteRead<Error=E>,
 {
@@ -167,7 +165,7 @@ impl<I2C, E> Lm75<I2C>
         self.i2c
             .write_read(self.address, &[Register::TEMPERATURE], &mut data)
             .map_err(Error::I2C)?;
-        Ok(conversion::convert_temp_from_register(data[0], data[1], self.resolution))
+        Ok(conversion::convert_temp_from_register(data[0], data[1]))
     }
 
     /// Read the sample rate period from the sensor (ms).

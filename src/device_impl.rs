@@ -24,7 +24,7 @@ impl BitFlags {
     const SAMPLE_RATE_MASK: u8 = 0b0001_1111;
 }
 
-impl<I2C, E> Lm75<I2C,ic::Lm75>
+impl<I2C, E> Lm75<I2C, ic::Lm75>
     where
         I2C: i2c::Write<Error=E>,
 {
@@ -40,7 +40,7 @@ impl<I2C, E> Lm75<I2C,ic::Lm75>
     }
 }
 
-impl<I2C, IC, E> Lm75<I2C,IC>
+impl<I2C, IC, E> Lm75<I2C, IC>
     where
         I2C: i2c::Write<Error=E>,
         IC: ResolutionSupport<E>
@@ -114,7 +114,7 @@ impl<I2C, IC, E> Lm75<I2C,IC>
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
         }
-        let (msb, lsb) = conversion::convert_temp_to_register(temperature);
+        let (msb, lsb) = conversion::convert_temp_to_register(temperature, IC::get_resolution_mask());
         self.i2c
             .write(self.address, &[Register::T_OS, msb, lsb])
             .map_err(Error::I2C)
@@ -125,12 +125,12 @@ impl<I2C, IC, E> Lm75<I2C,IC>
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
         }
-        let (msb, lsb) = conversion::convert_temp_to_register(temperature);
+        let (msb, lsb) = conversion::convert_temp_to_register(temperature, IC::get_resolution_mask());
         self.i2c
             .write(self.address, &[Register::T_HYST, msb, lsb])
             .map_err(Error::I2C)
     }
-
+    /// write configuration to device
     fn write_config(&mut self, config: Config) -> Result<(), Error<E>> {
         self.i2c
             .write(self.address, &[Register::CONFIGURATION, config.bits])
@@ -175,9 +175,10 @@ impl<I2C, E> Lm75<I2C, ic::Pct2075>
     }
 }
 
-impl<I2C, E> Lm75<I2C, ic::Lm75>
+impl<I2C, IC, E> Lm75<I2C, ic::Lm75>
     where
         I2C: i2c::WriteRead<Error=E>,
+        IC: ResolutionSupport<E>
 {
     /// Read the temperature from the sensor (celsius).
     pub fn read_temperature(&mut self) -> Result<f32, Error<E>> {
@@ -185,6 +186,6 @@ impl<I2C, E> Lm75<I2C, ic::Lm75>
         self.i2c
             .write_read(self.address, &[Register::TEMPERATURE], &mut data)
             .map_err(Error::I2C)?;
-        Ok(conversion::convert_temp_from_register(data[0], data[1]))
+        Ok(conversion::convert_temp_from_register(data[0], data[1], IC::get_resolution_mask()))
     }
 }

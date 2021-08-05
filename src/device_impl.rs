@@ -26,7 +26,6 @@ impl BitFlags {
 impl<I2C, IC, E> Xx75<I2C, IC>
     where
         I2C: i2c::Write<Error=E>,
-        IC: SampleRateSupport<E>,
         IC: ResolutionSupport<E>
 {
     /// Create new instance of the LM75 device.
@@ -39,7 +38,6 @@ impl<I2C, IC, E> Xx75<I2C, IC>
             _ic: PhantomData,
         }
     }
-
 
     /// Destroy driver instance, return I²C bus instance.
     pub fn destroy(self) -> I2C {
@@ -127,6 +125,32 @@ impl<I2C, IC, E> Xx75<I2C, IC>
             .map_err(Error::I2C)
     }
 
+    fn write_config(&mut self, config: Config) -> Result<(), Error<E>> {
+        self.i2c
+            .write(self.address, &[Register::CONFIGURATION, config.bits])
+            .map_err(Error::I2C)?;
+        self.config = config;
+        Ok(())
+    }
+}
+
+impl<I2C, IC, E> Xx75<I2C, IC>
+    where
+        I2C: i2c::Write<Error=E>,
+        IC: SampleRateSupport<E>,
+        IC: ResolutionSupport<E>
+{
+    /// Create new instance of the PCT2075 device.
+    pub fn new_pct2075<A: Into<Address>>(i2c: I2C, address: A) -> Self {
+        let a = address.into();
+        Xx75 {
+            i2c,
+            address: a.0,
+            config: Config::default(),
+            _ic: PhantomData,
+        }
+    }
+
     /// Set the sensor sample rate period in milliseconds (100ms increments).
     ///
     /// For values outside of the range `[100 - 3100]` or those not a multiple of 100,
@@ -135,14 +159,6 @@ impl<I2C, IC, E> Xx75<I2C, IC>
         self.i2c
             .write(self.address, &[Register::T_IDLE, byte])
             .map_err(Error::I2C)
-    }
-
-    fn write_config(&mut self, config: Config) -> Result<(), Error<E>> {
-        self.i2c
-            .write(self.address, &[Register::CONFIGURATION, config.bits])
-            .map_err(Error::I2C)?;
-        self.config = config;
-        Ok(())
     }
 }
 
@@ -159,7 +175,14 @@ impl<I2C, IC, E> Xx75<I2C, IC>
             .map_err(Error::I2C)?;
         Ok(conversion::convert_temp_from_register(data[0], data[1]))
     }
+}
 
+impl<I2C, IC, E> Xx75<I2C, IC>
+    where
+        I2C: i2c::WriteRead<Error=E>,
+        IC: SampleRateSupport<E>,
+        IC: ResolutionSupport<E>
+{
     /// Read the sample rate period from the sensor (ms).
     pub fn read_sample_rate(&mut self) -> Result<u16, Error<E>> {
         let mut data = [0; 1];

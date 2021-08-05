@@ -29,7 +29,7 @@ impl<E> SampleRateSupport<E> for ic::Pct2075 {
 
     fn convert_sample_rate_from_register(byte: u8) -> u16 {
         // Bits [4:0] hold sample rate value
-        (byte & BitMasks::SAMPLE_RATE_MASK)as u16 * 100
+        (byte & BitMasks::SAMPLE_RATE_MASK) as u16 * 100
     }
 }
 

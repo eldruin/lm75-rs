@@ -289,9 +289,9 @@ pub mod ic {
     pub struct Pct2075;
 }
 
-/// Xx75 device driver.
+/// LM75 device driver.
 #[derive(Debug, Default)]
-pub struct Xx75<I2C, IC> {
+pub struct Lm75<I2C, IC> {
     /// The concrete I²C device implementation.
     i2c: I2C,
     /// The I²C device address.

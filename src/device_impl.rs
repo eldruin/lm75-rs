@@ -1,6 +1,7 @@
-use crate::{conversion, Config, Error, FaultQueue, Xx75, OsMode, OsPolarity, Address, ic};
+use crate::{conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, Address, ic};
 use core::marker::PhantomData;
 use embedded_hal::blocking::i2c;
+use crate::markers::ResolutionSupport;
 
 struct Register;
 
@@ -23,21 +24,27 @@ impl BitFlags {
     const SAMPLE_RATE_MASK: u8 = 0b0001_1111;
 }
 
-impl<I2C, E> Xx75<I2C,ic::Lm75>
+impl<I2C, E> Lm75<I2C,ic::Lm75>
     where
         I2C: i2c::Write<Error=E>,
 {
     /// Create new instance of the LM75 device.
     pub fn new<A: Into<Address>>(i2c: I2C, address: A) -> Self {
         let a = address.into();
-        Xx75 {
+        Lm75 {
             i2c,
             address: a.0,
             config: Config::default(),
             _ic: PhantomData,
         }
     }
+}
 
+impl<I2C, IC, E> Lm75<I2C,IC>
+    where
+        I2C: i2c::Write<Error=E>,
+        IC: ResolutionSupport<E>
+{
     /// Destroy driver instance, return I²C bus instance.
     pub fn destroy(self) -> I2C {
         self.i2c
@@ -133,14 +140,14 @@ impl<I2C, E> Xx75<I2C,ic::Lm75>
     }
 }
 
-impl<I2C, E> Xx75<I2C, ic::Pct2075>
+impl<I2C, E> Lm75<I2C, ic::Pct2075>
     where
         I2C: i2c::Write<Error=E> + i2c::WriteRead<Error=E>
 {
     /// Create new instance of the PCT2075 device.
     pub fn new_pct2075<A: Into<Address>>(i2c: I2C, address: A) -> Self {
         let a = address.into();
-        Xx75 {
+        Lm75 {
             i2c,
             address: a.0,
             config: Config::default(),
@@ -168,7 +175,7 @@ impl<I2C, E> Xx75<I2C, ic::Pct2075>
     }
 }
 
-impl<I2C, E> Xx75<I2C, ic::Lm75>
+impl<I2C, E> Lm75<I2C, ic::Lm75>
     where
         I2C: i2c::WriteRead<Error=E>,
 {

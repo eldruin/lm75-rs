@@ -21,7 +21,6 @@ impl BitFlags {
     const OS_POLARITY: u8 = 0b0000_0100;
     const FAULT_QUEUE0: u8 = 0b0000_1000;
     const FAULT_QUEUE1: u8 = 0b0001_0000;
-    const SAMPLE_RATE_MASK: u8 = 0b0001_1111;
 }
 
 impl<I2C, E> Lm75<I2C, ic::Lm75>
@@ -159,7 +158,11 @@ impl<I2C, E> Lm75<I2C, ic::Pct2075>
     ///
     /// For values outside of the range `[100 - 3100]` or those not a multiple of 100,
     /// `Error::InvalidInputData will be returned
-    pub fn set_sample_rate(&mut self, byte: u8) -> Result<(), Error<E>> {
+    pub fn set_sample_rate(&mut self, period: u16) -> Result<(), Error<E>> {
+        if period > 3100 || period % 100 != 0 {
+            return Err(Error::InvalidInputData);
+        }
+        let byte = conversion::convert_sample_rate_to_register(period);
         self.i2c
             .write(self.address, &[Register::T_IDLE, byte])
             .map_err(Error::I2C)
@@ -175,7 +178,7 @@ impl<I2C, E> Lm75<I2C, ic::Pct2075>
     }
 }
 
-impl<I2C, IC, E> Lm75<I2C, ic::Lm75>
+impl<I2C, IC, E> Lm75<I2C, IC>
     where
         I2C: i2c::WriteRead<Error=E>,
         IC: ResolutionSupport<E>

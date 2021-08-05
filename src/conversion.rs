@@ -1,4 +1,5 @@
 //! Value conversions
+use crate::markers::BitMasks;
 
 pub fn convert_temp_from_register(msb: u8, lsb: u8, mask: u16) -> f32 {
     // msb is stored as two's complement
@@ -17,7 +18,7 @@ pub fn convert_temp_to_register(temp: f32, mask: u16) -> (u8, u8) {
 
 pub fn convert_sample_rate_from_register(byte: u8) -> u16 {
     // Bits [4:0] hold sample rate value
-    ((byte as u16) & 0x1F) * 100
+    (byte & BitMasks::SAMPLE_RATE_MASK) as u16 * 100
 }
 
 pub fn convert_sample_rate_to_register(period: u16) -> u8 {

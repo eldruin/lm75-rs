@@ -20,6 +20,7 @@ impl BitFlags {
     const OS_POLARITY: u8 = 0b0000_0100;
     const FAULT_QUEUE0: u8 = 0b0000_1000;
     const FAULT_QUEUE1: u8 = 0b0001_0000;
+    const SAMPLE_RATE_MASK: u8 = 0b0001_1111;
 }
 
 impl<I2C, E> Xx75<I2C,ic::Lm75>

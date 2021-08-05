@@ -1,5 +1,12 @@
 use crate::{ic, private, Error};
-use crate::device_impl::BitFlags;
+
+struct BitMasks;
+
+impl BitMasks {
+    const SAMPLE_RATE_MASK: u8 = 0b0001_1111;
+    const RESOLUTION_9BIT: u16 = 0b11111111_100000000;
+}
+
 
 #[doc(hidden)]
 pub trait SampleRateSupport<E>: private::Sealed {
@@ -22,7 +29,7 @@ impl<E> SampleRateSupport<E> for ic::Pct2075 {
 
     fn convert_sample_rate_from_register(byte: u8) -> u16 {
         // Bits [4:0] hold sample rate value
-        ((byte as u16) & BitFlags::SAMPLE_RATE_MASK) * 100
+        (byte & BitMasks::SAMPLE_RATE_MASK)as u16 * 100
     }
 }
 

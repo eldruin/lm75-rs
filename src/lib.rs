@@ -287,7 +287,6 @@ pub mod ic {
 
     /// PCT2075 Marker
     pub struct Pct2075;
-
 }
 
 /// LM75 device driver.
@@ -300,12 +299,11 @@ pub struct Xx75<I2C, IC> {
     /// Configuration register status.
     config: Config,
     /// Device Marker
-    _ic: PhantomData<IC>
+    _ic: PhantomData<IC>,
 }
 
 mod conversion;
 mod device_impl;
-mod resolution;
 mod markers;
 
 pub mod private {

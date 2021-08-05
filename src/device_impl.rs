@@ -1,7 +1,7 @@
-use crate::{conversion, Config, Error, FaultQueue, Xx75, OsMode, OsPolarity, Address, marker};
+use crate::{conversion, Config, Error, FaultQueue, Xx75, OsMode, OsPolarity, Address};
 use core::marker::PhantomData;
 use embedded_hal::blocking::i2c;
-use crate::markers::SampleRateSupport;
+use crate::markers::*;
 
 struct Register;
 
@@ -13,7 +13,7 @@ impl Register {
     const T_IDLE: u8 = 0x04;
 }
 
-pub struct BitFlags;
+struct BitFlags;
 
 impl BitFlags {
     const SHUTDOWN: u8 = 0b0000_0001;
@@ -21,34 +21,25 @@ impl BitFlags {
     const OS_POLARITY: u8 = 0b0000_0100;
     const FAULT_QUEUE0: u8 = 0b0000_1000;
     const FAULT_QUEUE1: u8 = 0b0001_0000;
-    pub const SAMPLE_RATE_MASK: u8 = 0b0001_1111;
 }
 
-impl<I2C, IC, E> Xx75<I2C,SR>
+impl<I2C, IC, E> Xx75<I2C, IC>
     where
         I2C: i2c::Write<Error=E>,
+        IC: SampleRateSupport<E>,
+        IC: ResolutionSupport<E>
 {
     /// Create new instance of the LM75 device.
-    pub fn new<A: Into<Address>, IC>(i2c: I2C, address: A) -> Self {
+    pub fn new<A: Into<Address>>(i2c: I2C, address: A) -> Self {
         let a = address.into();
-        Lm75 {
+        Xx75 {
             i2c,
             address: a.0,
             config: Config::default(),
-            _ic: PhantomData
+            _ic: PhantomData,
         }
     }
 
-    /// Create new instance of the PCT2075 device.
-    pub fn new_pct2075<A: Into<Address>, IC>(i2c: I2C, address: A) -> Self {
-        let a = address.into();
-        Lm75 {
-            i2c,
-            address: a.0,
-            config: Config::default(),
-            _ic: PhantomData
-        }
-    }
 
     /// Destroy driver instance, return I²C bus instance.
     pub fn destroy(self) -> I2C {
@@ -140,7 +131,7 @@ impl<I2C, IC, E> Xx75<I2C,SR>
     ///
     /// For values outside of the range `[100 - 3100]` or those not a multiple of 100,
     /// `Error::InvalidInputData will be returned
-    pub fn set_sample_rate(&mut self) -> Result<(), Error<E>> {
+    pub fn set_sample_rate(&mut self, byte: u8) -> Result<(), Error<E>> {
         self.i2c
             .write(self.address, &[Register::T_IDLE, byte])
             .map_err(Error::I2C)
@@ -158,6 +149,7 @@ impl<I2C, IC, E> Xx75<I2C,SR>
 impl<I2C, IC, E> Xx75<I2C, IC>
     where
         I2C: i2c::WriteRead<Error=E>,
+        IC: ResolutionSupport<E>
 {
     /// Read the temperature from the sensor (celsius).
     pub fn read_temperature(&mut self) -> Result<f32, Error<E>> {
@@ -170,9 +162,6 @@ impl<I2C, IC, E> Xx75<I2C, IC>
 
     /// Read the sample rate period from the sensor (ms).
     pub fn read_sample_rate(&mut self) -> Result<u16, Error<E>> {
-        if self.sample_rate.bits.is_none() {
-            return Err(Error::InvalidRegister);
-        }
         let mut data = [0; 1];
         self.i2c
             .write_read(self.address, &[Register::T_IDLE], &mut data)

@@ -18,7 +18,6 @@ pub fn convert_temp_to_register(temp: f32) -> (u8, u8) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use Resolution::*;
 
     #[test]
     fn can_convert_temperature_from_register() {

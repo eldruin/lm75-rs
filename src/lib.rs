@@ -281,6 +281,7 @@ impl Default for Config {
     }
 }
 
+/// IC Markers
 pub mod ic {
     /// LM75 Marker
     pub struct Lm75;
@@ -306,9 +307,11 @@ mod conversion;
 mod device_impl;
 mod markers;
 
+/// Private Module
 pub mod private {
     use crate::ic;
 
+    /// Sealed Traits
     pub trait Sealed {}
 
     impl Sealed for ic::Lm75 {}

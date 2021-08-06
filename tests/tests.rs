@@ -1,9 +1,9 @@
 use embedded_hal_mock::i2c::Transaction as I2cTrans;
-use lm75::{FaultQueue, OsMode, OsPolarity};
+use lm75::{FaultQueue, OsMode, OsPolarity,ic};
 
 mod common;
 
-use crate::common::{assert_invalid_input_data_error, assert_invalid_register_error, destroy, new, new_pct2075, Register, ADDR};
+use crate::common::{assert_invalid_input_data_error, assert_invalid_register_error, destroy, destroy_pct2075,new, new_pct2075, Register, ADDR};
 
 #[test]
 fn can_create_and_destroy_new() {
@@ -14,7 +14,7 @@ fn can_create_and_destroy_new() {
 #[test]
 fn can_create_and_destroy_new_pct2075() {
     let sensor = new_pct2075(&[]);
-    destroy(sensor);
+    destroy_pct2075(sensor);
 }
 
 #[test]
@@ -220,7 +220,7 @@ macro_rules! set_sample_rate_test {
                 vec![$register, $period],
             )]);
             sensor.$method($value).unwrap();
-            destroy(sensor);
+            destroy_pct2075(sensor);
         }
     };
 }
@@ -251,7 +251,7 @@ macro_rules! invalid_sample_rate_test {
     ($test_name:ident, $method:ident, $value:expr) => {
         #[test]
         fn $test_name() {
-            let mut sensor = new_pct2075(&[]);
+            let mut sensor = new_pct2075<IC>(&[]);
             assert_invalid_input_data_error(sensor.$method($value));
         }
     };
@@ -259,25 +259,3 @@ macro_rules! invalid_sample_rate_test {
 
 invalid_sample_rate_test!(set_sample_rate_too_high, set_sample_rate, 4000);
 invalid_sample_rate_test!(set_non_multiple_sample_rate, set_sample_rate, 1234);
-
-macro_rules! invalid_register_write {
-    ( $test_name:ident, $method:ident, $value:expr, $register:expr,
-      $period:expr) => {
-        #[test]
-        fn $test_name() {
-            let mut sensor = new(&[I2cTrans::write(
-                ADDR,
-                vec![$register, $period],
-            )]);
-            assert_invalid_register_error(sensor.$method($value))
-        }
-    };
-}
-
-invalid_register_write!(
-    set_non_existent_register,
-    set_sample_rate,
-    100,
-    Register::T_IDLE,
-    0b0001_1111
-);

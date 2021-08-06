@@ -1,9 +1,9 @@
 use embedded_hal_mock::i2c::Transaction as I2cTrans;
-use lm75::{FaultQueue, OsMode, OsPolarity,ic};
+use lm75::{FaultQueue, OsMode, OsPolarity};
 
 mod common;
 
-use crate::common::{assert_invalid_input_data_error, assert_invalid_register_error, destroy, destroy_pct2075,new, new_pct2075, Register, ADDR};
+use crate::common::{assert_invalid_input_data_error, destroy, destroy_pct2075, new, new_pct2075, Register, ADDR};
 
 #[test]
 fn can_create_and_destroy_new() {
@@ -53,7 +53,7 @@ fn can_read_sample_rate() {
     )]);
     let period = sensor.read_sample_rate().unwrap();
     assert_eq!(100, period);
-    destroy(sensor);
+    destroy_pct2075(sensor);
 }
 
 macro_rules! set_config_test {
@@ -251,7 +251,7 @@ macro_rules! invalid_sample_rate_test {
     ($test_name:ident, $method:ident, $value:expr) => {
         #[test]
         fn $test_name() {
-            let mut sensor = new_pct2075<IC>(&[]);
+            let mut sensor = new_pct2075(&[]);
             assert_invalid_input_data_error(sensor.$method($value));
         }
     };

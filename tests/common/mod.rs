@@ -13,19 +13,19 @@ impl Register {
     pub const T_IDLE: u8 = 0x04;
 }
 
-pub fn new<IC>(transactions: &[I2cTrans]) -> Lm75<I2cMock, ic::Lm75> {
+pub fn new(transactions: &[I2cTrans]) -> Lm75<I2cMock, ic::Lm75> {
     Lm75::new(I2cMock::new(transactions), Address::default())
 }
 
-pub fn new_pct2075<IC>(transactions: &[I2cTrans]) -> Lm75<I2cMock, ic::Pct2075> {
+pub fn new_pct2075(transactions: &[I2cTrans]) -> Lm75<I2cMock, ic::Pct2075> {
     Lm75::new_pct2075(I2cMock::new(transactions), Address::default())
 }
 
-pub fn destroy<IC>(sensor: Lm75<I2cMock, ic::Lm75>) {
+pub fn destroy(sensor: Lm75<I2cMock, ic::Lm75>) {
     sensor.destroy().done();
 }
 
-pub fn destroy_pct2075<IC>(sensor: Lm75<I2cMock, ic::Pct2075>) {
+pub fn destroy_pct2075(sensor: Lm75<I2cMock, ic::Pct2075>) {
     sensor.destroy().done();
 }
 

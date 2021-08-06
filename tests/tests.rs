@@ -3,7 +3,9 @@ use lm75::{FaultQueue, OsMode, OsPolarity};
 
 mod common;
 
-use crate::common::{assert_invalid_input_data_error, destroy, destroy_pct2075, new, new_pct2075, Register, ADDR};
+use crate::common::{
+    assert_invalid_input_data_error, destroy, destroy_pct2075, new, new_pct2075, Register, ADDR,
+};
 
 #[test]
 fn can_create_and_destroy_new() {
@@ -215,10 +217,7 @@ macro_rules! set_sample_rate_test {
       $period:expr) => {
         #[test]
         fn $test_name() {
-            let mut sensor = new_pct2075(&[I2cTrans::write(
-                ADDR,
-                vec![$register, $period],
-            )]);
+            let mut sensor = new_pct2075(&[I2cTrans::write(ADDR, vec![$register, $period])]);
             sensor.$method($value).unwrap();
             destroy_pct2075(sensor);
         }

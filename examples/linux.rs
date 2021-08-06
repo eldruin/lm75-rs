@@ -1,5 +1,5 @@
 use linux_embedded_hal::I2cdev;
-use lm75::{Lm75, Address};
+use lm75::{Address, Lm75};
 
 fn main() {
     let dev = I2cdev::new("/dev/i2c-1").unwrap();

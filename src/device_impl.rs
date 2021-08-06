@@ -1,7 +1,7 @@
-use crate::{conversion, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity, Address, ic};
+use crate::markers::ResolutionSupport;
+use crate::{conversion, ic, Address, Config, Error, FaultQueue, Lm75, OsMode, OsPolarity};
 use core::marker::PhantomData;
 use embedded_hal::blocking::i2c;
-use crate::markers::ResolutionSupport;
 
 struct Register;
 
@@ -24,8 +24,8 @@ impl BitFlags {
 }
 
 impl<I2C, E> Lm75<I2C, ic::Lm75>
-    where
-        I2C: i2c::Write<Error=E>,
+where
+    I2C: i2c::Write<Error = E>,
 {
     /// Create new instance of the LM75 device.
     pub fn new<A: Into<Address>>(i2c: I2C, address: A) -> Self {
@@ -40,9 +40,9 @@ impl<I2C, E> Lm75<I2C, ic::Lm75>
 }
 
 impl<I2C, IC, E> Lm75<I2C, IC>
-    where
-        I2C: i2c::Write<Error=E>,
-        IC: ResolutionSupport<E>
+where
+    I2C: i2c::Write<Error = E>,
+    IC: ResolutionSupport<E>,
 {
     /// Destroy driver instance, return I²C bus instance.
     pub fn destroy(self) -> I2C {
@@ -113,7 +113,8 @@ impl<I2C, IC, E> Lm75<I2C, IC>
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
         }
-        let (msb, lsb) = conversion::convert_temp_to_register(temperature, IC::get_resolution_mask());
+        let (msb, lsb) =
+            conversion::convert_temp_to_register(temperature, IC::get_resolution_mask());
         self.i2c
             .write(self.address, &[Register::T_OS, msb, lsb])
             .map_err(Error::I2C)
@@ -124,7 +125,8 @@ impl<I2C, IC, E> Lm75<I2C, IC>
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
         }
-        let (msb, lsb) = conversion::convert_temp_to_register(temperature, IC::get_resolution_mask());
+        let (msb, lsb) =
+            conversion::convert_temp_to_register(temperature, IC::get_resolution_mask());
         self.i2c
             .write(self.address, &[Register::T_HYST, msb, lsb])
             .map_err(Error::I2C)
@@ -140,8 +142,8 @@ impl<I2C, IC, E> Lm75<I2C, IC>
 }
 
 impl<I2C, E> Lm75<I2C, ic::Pct2075>
-    where
-        I2C: i2c::Write<Error=E> + i2c::WriteRead<Error=E>
+where
+    I2C: i2c::Write<Error = E> + i2c::WriteRead<Error = E>,
 {
     /// Create new instance of the PCT2075 device.
     pub fn new_pct2075<A: Into<Address>>(i2c: I2C, address: A) -> Self {
@@ -179,9 +181,9 @@ impl<I2C, E> Lm75<I2C, ic::Pct2075>
 }
 
 impl<I2C, IC, E> Lm75<I2C, IC>
-    where
-        I2C: i2c::WriteRead<Error=E>,
-        IC: ResolutionSupport<E>
+where
+    I2C: i2c::WriteRead<Error = E>,
+    IC: ResolutionSupport<E>,
 {
     /// Read the temperature from the sensor (celsius).
     pub fn read_temperature(&mut self) -> Result<f32, Error<E>> {
@@ -189,6 +191,10 @@ impl<I2C, IC, E> Lm75<I2C, IC>
         self.i2c
             .write_read(self.address, &[Register::TEMPERATURE], &mut data)
             .map_err(Error::I2C)?;
-        Ok(conversion::convert_temp_from_register(data[0], data[1], IC::get_resolution_mask()))
+        Ok(conversion::convert_temp_from_register(
+            data[0],
+            data[1],
+            IC::get_resolution_mask(),
+        ))
     }
 }

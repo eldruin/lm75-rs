@@ -40,7 +40,7 @@ Datasheet:
 
 This driver is also compatible with at least [LM75A], [LM75B, LM75C],
 [AT30TS75A], [DS1775], [DS75], [DS7505], [G751], [MAX7500/1/2/3/4], [MAX6625], [MCP9800/1/2/3],
-[STDS75], [TCN75].
+[STDS75], [TCN75], [PCT2075].
 
 [AT30TS75A]: http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8839-DTS-AT30TS75A-Datasheet.pdf
 [DS1775]: https://datasheets.maximintegrated.com/en/ds/DS1775-DS1775R.pdf
@@ -54,6 +54,7 @@ This driver is also compatible with at least [LM75A], [LM75B, LM75C],
 [MCP9800/1/2/3]: http://ww1.microchip.com/downloads/en/DeviceDoc/21909d.pdf
 [STDS75]: https://www.st.com/resource/en/datasheet/stds75.pdf
 [TCN75]: http://ww1.microchip.com/downloads/en/DeviceDoc/21490D.pdf
+[PCT2075]: https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf
 
 ### Usage
 

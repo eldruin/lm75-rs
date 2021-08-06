@@ -213,12 +213,7 @@ impl From<u8> for Address {
 /// Compute device address from address bits where bits are not floating
 impl From<(bool, bool, bool)> for Address {
     fn from(a: (bool, bool, bool)) -> Self {
-        Address(
-            DEVICE_BASE_ADDRESS
-                | ((a.0 as u8) << 2)
-                | ((a.1 as u8) << 1)
-                | a.2 as u8,
-        )
+        Address(DEVICE_BASE_ADDRESS | ((a.0 as u8) << 2) | ((a.1 as u8) << 1) | a.2 as u8)
     }
 }
 
@@ -325,10 +320,7 @@ mod tests {
 
     #[test]
     fn default_address_matches_alternative_all_false() {
-        assert_eq!(
-            Address::default(),
-            Address::from((false, false, false))
-        )
+        assert_eq!(Address::default(), Address::from((false, false, false)))
     }
 
     #[test]
@@ -349,9 +341,6 @@ mod tests {
             Address::from(0b100_1100),
             Address::from((true, false, false))
         );
-        assert_eq!(
-            Address::from(0b100_1111),
-            Address::from((true, true, true))
-        );
+        assert_eq!(Address::from(0b100_1111), Address::from((true, true, true)));
     }
 }

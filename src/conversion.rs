@@ -40,70 +40,244 @@ mod tests {
 
     #[test]
     fn can_convert_temperature_from_register() {
-        assert_near!(convert_temp_from_register(0b0111_1101, 0b0101_1010, BitMasks::RESOLUTION_9BIT), 125.0);
-        assert_near!(convert_temp_from_register(0b0001_1001, 0b0101_1010, BitMasks::RESOLUTION_9BIT), 25.0);
-        assert_near!(convert_temp_from_register(0b1110_0111, 0b0101_1010, BitMasks::RESOLUTION_9BIT), -25.0);
-        assert_near!(convert_temp_from_register(0b1100_1001, 0b0101_1010, BitMasks::RESOLUTION_9BIT), -55.0);
-        assert_near!(convert_temp_from_register(0b0000_0000, 0b0101_1010, BitMasks::RESOLUTION_9BIT), 0.0);
-        assert_near!(convert_temp_from_register(0b0000_0000, 0b1101_1010, BitMasks::RESOLUTION_9BIT), 0.5);
-        assert_near!(convert_temp_from_register(0b0010_0000, 0b0101_1010, BitMasks::RESOLUTION_9BIT), 32.0);
-        assert_near!(convert_temp_from_register(0b0100_1011, 0b0101_1010, BitMasks::RESOLUTION_9BIT), 75.0);
-        assert_near!(convert_temp_from_register(0b0101_0000, 0b0101_1010, BitMasks::RESOLUTION_9BIT), 80.0);
-        assert_near!(convert_temp_from_register(0b0111_1111, 0b1101_1010, BitMasks::RESOLUTION_9BIT), 127.5);
-        assert_near!(convert_temp_from_register(0b1111_1111, 0b1101_1010, BitMasks::RESOLUTION_9BIT), -0.5);
-        assert_near!(convert_temp_from_register(0b1111_1111, 0b0101_1010, BitMasks::RESOLUTION_9BIT), -1.0);
-        assert_near!(convert_temp_from_register(0b1111_1101, 0b1101_1010, BitMasks::RESOLUTION_9BIT), -2.5);
-        assert_near!(convert_temp_from_register(0b1110_0000, 0b0101_1010, BitMasks::RESOLUTION_9BIT), -32.0);
-        assert_near!(convert_temp_from_register(0b1000_0000, 0b1101_1010, BitMasks::RESOLUTION_9BIT), -127.5);
-        assert_near!(convert_temp_from_register(0b1000_0000, 0b0101_1010, BitMasks::RESOLUTION_9BIT), -128.0);
+        assert_near!(
+            convert_temp_from_register(0b0111_1101, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            125.0
+        );
+        assert_near!(
+            convert_temp_from_register(0b0001_1001, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            25.0
+        );
+        assert_near!(
+            convert_temp_from_register(0b1110_0111, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            -25.0
+        );
+        assert_near!(
+            convert_temp_from_register(0b1100_1001, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            -55.0
+        );
+        assert_near!(
+            convert_temp_from_register(0b0000_0000, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            0.0
+        );
+        assert_near!(
+            convert_temp_from_register(0b0000_0000, 0b1101_1010, BitMasks::RESOLUTION_9BIT),
+            0.5
+        );
+        assert_near!(
+            convert_temp_from_register(0b0010_0000, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            32.0
+        );
+        assert_near!(
+            convert_temp_from_register(0b0100_1011, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            75.0
+        );
+        assert_near!(
+            convert_temp_from_register(0b0101_0000, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            80.0
+        );
+        assert_near!(
+            convert_temp_from_register(0b0111_1111, 0b1101_1010, BitMasks::RESOLUTION_9BIT),
+            127.5
+        );
+        assert_near!(
+            convert_temp_from_register(0b1111_1111, 0b1101_1010, BitMasks::RESOLUTION_9BIT),
+            -0.5
+        );
+        assert_near!(
+            convert_temp_from_register(0b1111_1111, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            -1.0
+        );
+        assert_near!(
+            convert_temp_from_register(0b1111_1101, 0b1101_1010, BitMasks::RESOLUTION_9BIT),
+            -2.5
+        );
+        assert_near!(
+            convert_temp_from_register(0b1110_0000, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            -32.0
+        );
+        assert_near!(
+            convert_temp_from_register(0b1000_0000, 0b1101_1010, BitMasks::RESOLUTION_9BIT),
+            -127.5
+        );
+        assert_near!(
+            convert_temp_from_register(0b1000_0000, 0b0101_1010, BitMasks::RESOLUTION_9BIT),
+            -128.0
+        );
 
-        assert_near!(convert_temp_from_register(0b0111_1101, 0b0101_1010, BitMasks::RESOLUTION_11BIT), 125.250);
-        assert_near!(convert_temp_from_register(0b0001_1001, 0b0101_1010, BitMasks::RESOLUTION_11BIT), 25.250);
-        assert_near!(convert_temp_from_register(0b1110_0111, 0b0101_1010, BitMasks::RESOLUTION_11BIT), -24.750);
-        assert_near!(convert_temp_from_register(0b1100_1001, 0b0101_1010, BitMasks::RESOLUTION_11BIT), -54.750);
-        assert_near!(convert_temp_from_register(0b0000_0000, 0b0101_1010, BitMasks::RESOLUTION_11BIT), 0.250);
-        assert_near!(convert_temp_from_register(0b0000_0000, 0b1101_1010, BitMasks::RESOLUTION_11BIT), 0.750);
-        assert_near!(convert_temp_from_register(0b0010_0000, 0b0101_1010, BitMasks::RESOLUTION_11BIT), 32.250);
-        assert_near!(convert_temp_from_register(0b0100_1011, 0b0101_1010, BitMasks::RESOLUTION_11BIT), 75.250);
-        assert_near!(convert_temp_from_register(0b0101_0000, 0b0101_1010, BitMasks::RESOLUTION_11BIT), 80.250);
-        assert_near!(convert_temp_from_register(0b0111_1111, 0b1101_1010, BitMasks::RESOLUTION_11BIT), 127.750);
-        assert_near!(convert_temp_from_register(0b1111_1111, 0b1101_1010, BitMasks::RESOLUTION_11BIT), -0.250);
-        assert_near!(convert_temp_from_register(0b1111_1111, 0b0101_1010, BitMasks::RESOLUTION_11BIT), -0.750);
-        assert_near!(convert_temp_from_register(0b1111_1101, 0b1101_1010, BitMasks::RESOLUTION_11BIT), -2.250);
-        assert_near!(convert_temp_from_register(0b1110_0000, 0b0101_1010, BitMasks::RESOLUTION_11BIT), -31.750);
-        assert_near!(convert_temp_from_register(0b1000_0000, 0b1101_1010, BitMasks::RESOLUTION_11BIT), -127.250);
-        assert_near!(convert_temp_from_register(0b1000_0000, 0b0101_1010, BitMasks::RESOLUTION_11BIT), -127.750);
+        assert_near!(
+            convert_temp_from_register(0b0111_1101, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            125.250
+        );
+        assert_near!(
+            convert_temp_from_register(0b0001_1001, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            25.250
+        );
+        assert_near!(
+            convert_temp_from_register(0b1110_0111, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            -24.750
+        );
+        assert_near!(
+            convert_temp_from_register(0b1100_1001, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            -54.750
+        );
+        assert_near!(
+            convert_temp_from_register(0b0000_0000, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            0.250
+        );
+        assert_near!(
+            convert_temp_from_register(0b0000_0000, 0b1101_1010, BitMasks::RESOLUTION_11BIT),
+            0.750
+        );
+        assert_near!(
+            convert_temp_from_register(0b0010_0000, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            32.250
+        );
+        assert_near!(
+            convert_temp_from_register(0b0100_1011, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            75.250
+        );
+        assert_near!(
+            convert_temp_from_register(0b0101_0000, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            80.250
+        );
+        assert_near!(
+            convert_temp_from_register(0b0111_1111, 0b1101_1010, BitMasks::RESOLUTION_11BIT),
+            127.750
+        );
+        assert_near!(
+            convert_temp_from_register(0b1111_1111, 0b1101_1010, BitMasks::RESOLUTION_11BIT),
+            -0.250
+        );
+        assert_near!(
+            convert_temp_from_register(0b1111_1111, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            -0.750
+        );
+        assert_near!(
+            convert_temp_from_register(0b1111_1101, 0b1101_1010, BitMasks::RESOLUTION_11BIT),
+            -2.250
+        );
+        assert_near!(
+            convert_temp_from_register(0b1110_0000, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            -31.750
+        );
+        assert_near!(
+            convert_temp_from_register(0b1000_0000, 0b1101_1010, BitMasks::RESOLUTION_11BIT),
+            -127.250
+        );
+        assert_near!(
+            convert_temp_from_register(0b1000_0000, 0b0101_1010, BitMasks::RESOLUTION_11BIT),
+            -127.750
+        );
     }
 
     #[test]
     fn can_convert_temperature_to_register() {
-        assert_eq!((0b0000_0010, 0b0000_0000), convert_temp_to_register(2.4, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b0000_0010, 0b1000_0000), convert_temp_to_register(2.6, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b1111_1110, 0b0000_0000), convert_temp_to_register(-2.0, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b1111_1101, 0b1000_0000), convert_temp_to_register(-2.6, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b0111_1101, 0b0000_0000), convert_temp_to_register(125.0, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b0001_1001, 0b0000_0000), convert_temp_to_register(25.0, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b1110_0111, 0b0000_0000), convert_temp_to_register(-25.0, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b1100_1001, 0b0000_0000), convert_temp_to_register(-55.0, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b0000_0000, 0b0000_0000), convert_temp_to_register(0.0, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b0000_0000, 0b1000_0000), convert_temp_to_register(0.5, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b0010_0000, 0b0000_0000), convert_temp_to_register(32.0, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b0111_1111, 0b1000_0000), convert_temp_to_register(127.5, BitMasks::RESOLUTION_9BIT));
-        assert_eq!((0b1000_0000, 0b0000_0000), convert_temp_to_register(-128.0, BitMasks::RESOLUTION_9BIT));
+        assert_eq!(
+            (0b0000_0010, 0b0000_0000),
+            convert_temp_to_register(2.4, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b0000_0010, 0b1000_0000),
+            convert_temp_to_register(2.6, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b1111_1110, 0b0000_0000),
+            convert_temp_to_register(-2.0, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b1111_1101, 0b1000_0000),
+            convert_temp_to_register(-2.6, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b0111_1101, 0b0000_0000),
+            convert_temp_to_register(125.0, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b0001_1001, 0b0000_0000),
+            convert_temp_to_register(25.0, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b1110_0111, 0b0000_0000),
+            convert_temp_to_register(-25.0, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b1100_1001, 0b0000_0000),
+            convert_temp_to_register(-55.0, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b0000_0000, 0b0000_0000),
+            convert_temp_to_register(0.0, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b0000_0000, 0b1000_0000),
+            convert_temp_to_register(0.5, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b0010_0000, 0b0000_0000),
+            convert_temp_to_register(32.0, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b0111_1111, 0b1000_0000),
+            convert_temp_to_register(127.5, BitMasks::RESOLUTION_9BIT)
+        );
+        assert_eq!(
+            (0b1000_0000, 0b0000_0000),
+            convert_temp_to_register(-128.0, BitMasks::RESOLUTION_9BIT)
+        );
 
-        assert_eq!((0b0000_0010, 0b0110_0000), convert_temp_to_register(2.4, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b0000_0010, 0b1000_0000), convert_temp_to_register(2.6, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b1111_1110, 0b0000_0000), convert_temp_to_register(-2.0, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b1111_1101, 0b1000_0000), convert_temp_to_register(-2.6, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b0111_1101, 0b0000_0000), convert_temp_to_register(125.0, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b0001_1001, 0b0000_0000), convert_temp_to_register(25.0, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b1110_0111, 0b0000_0000), convert_temp_to_register(-25.0, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b1100_1001, 0b0000_0000), convert_temp_to_register(-55.0, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b0000_0000, 0b0000_0000), convert_temp_to_register(0.0, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b0000_0000, 0b1000_0000), convert_temp_to_register(0.5, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b0010_0000, 0b0000_0000), convert_temp_to_register(32.0, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b0111_1111, 0b1000_0000), convert_temp_to_register(127.5, BitMasks::RESOLUTION_11BIT));
-        assert_eq!((0b1000_0000, 0b0000_0000), convert_temp_to_register(-128.0, BitMasks::RESOLUTION_11BIT));
+        assert_eq!(
+            (0b0000_0010, 0b0110_0000),
+            convert_temp_to_register(2.4, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b0000_0010, 0b1000_0000),
+            convert_temp_to_register(2.6, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b1111_1110, 0b0000_0000),
+            convert_temp_to_register(-2.0, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b1111_1101, 0b1000_0000),
+            convert_temp_to_register(-2.6, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b0111_1101, 0b0000_0000),
+            convert_temp_to_register(125.0, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b0001_1001, 0b0000_0000),
+            convert_temp_to_register(25.0, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b1110_0111, 0b0000_0000),
+            convert_temp_to_register(-25.0, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b1100_1001, 0b0000_0000),
+            convert_temp_to_register(-55.0, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b0000_0000, 0b0000_0000),
+            convert_temp_to_register(0.0, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b0000_0000, 0b1000_0000),
+            convert_temp_to_register(0.5, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b0010_0000, 0b0000_0000),
+            convert_temp_to_register(32.0, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b0111_1111, 0b1000_0000),
+            convert_temp_to_register(127.5, BitMasks::RESOLUTION_11BIT)
+        );
+        assert_eq!(
+            (0b1000_0000, 0b0000_0000),
+            convert_temp_to_register(-128.0, BitMasks::RESOLUTION_11BIT)
+        );
     }
 
     #[test]

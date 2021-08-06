@@ -3,11 +3,10 @@ use crate::{ic, private};
 pub struct BitMasks;
 
 impl BitMasks {
-    pub const RESOLUTION_9BIT: u16 = 0b11111111_10000000;
-    pub const RESOLUTION_11BIT: u16 = 0b11111111_11100000;
+    pub const RESOLUTION_9BIT: u16 = 0b1111_1111_1000_0000;
+    pub const RESOLUTION_11BIT: u16 = 0b1111_1111_1110_0000;
     pub const SAMPLE_RATE_MASK: u8 = 0b0001_1111;
 }
-
 
 #[doc(hidden)]
 pub trait ResolutionSupport<E>: private::Sealed {

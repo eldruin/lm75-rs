@@ -84,14 +84,14 @@
 //! let mut sensor = Lm75::new(dev, address);
 //! ```
 //!
-//! ### Provide a custom address for PCT2075 only
+//! ### Provide a full custom address
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
 //! use lm75::{Lm75, Address};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let all_pins_floating = 0x37; // 0b011_0111
+//! let all_pins_floating = 0x37; // PCT2075 supports 27 addresses
 //! let address = Address::from(all_pins_floating);
 //! let mut sensor = Lm75::new_pct2075(dev, address);
 //! ```
@@ -154,7 +154,7 @@
 //! let temp_celsius = 40.0;
 //! sensor.set_hysteresis_temperature(temp_celsius).unwrap();
 //! ```
-//! ### Set the Sample Rate on the PCT2075 only
+//! ### Set the Sample Rate (PCT2075 only)
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;

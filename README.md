@@ -17,6 +17,7 @@ This driver allows you to:
 - Set the hysteresis temperature.
 - Set the OS operation mode.
 - Set the OS polarity.
+- Set the sample rate of temperature measurements (PCT2075 only) 
 
 ## The device
 

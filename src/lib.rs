@@ -164,7 +164,7 @@
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut sensor = Lm75::new_pct2075(dev, Address::default());
-//! let period = 1500; //in milliseconds, max = 3100, default 100
+//! let period = 1500; // in milliseconds, max = 3100, default 100
 //! sensor.set_sample_rate(period).unwrap();
 //! ```
 //!
@@ -198,7 +198,7 @@ pub enum Error<E> {
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Address(pub(crate) u8);
 
-/// Default device
+/// Default address
 impl Default for Address {
     fn default() -> Self {
         Address(DEVICE_BASE_ADDRESS)

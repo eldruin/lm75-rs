@@ -47,6 +47,19 @@ fn can_read_temperature() {
 }
 
 #[test]
+fn can_read_temperature_pct2075() {
+    let mut sensor = new_pct2075(&[I2cTrans::write_read(
+        ADDR,
+        vec![Register::TEMPERATURE],
+        vec![0b1110_0111, 0b1010_0101], // -24.375
+    )]);
+    let temp = sensor.read_temperature().unwrap();
+    assert!(-24.3 > temp);
+    assert!(-24.4 < temp);
+    destroy_pct2075(sensor);
+}
+
+#[test]
 fn can_read_sample_rate() {
     let mut sensor = new_pct2075(&[I2cTrans::write_read(
         ADDR,

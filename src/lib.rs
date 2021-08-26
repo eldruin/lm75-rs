@@ -198,7 +198,7 @@ pub enum Error<E> {
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Address(pub(crate) u8);
 
-/// Default device
+/// Default address
 impl Default for Address {
     fn default() -> Self {
         Address(DEVICE_BASE_ADDRESS)

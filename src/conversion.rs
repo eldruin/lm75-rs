@@ -3,8 +3,8 @@ use crate::markers::BitMasks;
 
 pub fn convert_temp_from_register(msb: u8, lsb: u8, mask: u16) -> f32 {
     // msb is stored as two's complement
-    let msb = msb as i8 as f32;
-    let decimal = ((lsb & mask as u8) >> 5) as f32 * 0.125;
+    let msb = f32::from(msb as i8);
+    let decimal = f32::from((lsb & mask as u8) >> 5) * 0.125;
     msb + decimal
 }
 
@@ -18,7 +18,7 @@ pub fn convert_temp_to_register(temp: f32, mask: u16) -> (u8, u8) {
 
 pub fn convert_sample_rate_from_register(byte: u8) -> u16 {
     // Bits [4:0] hold sample rate value
-    (byte & BitMasks::SAMPLE_RATE_MASK) as u16 * 100
+    u16::from(byte & BitMasks::SAMPLE_RATE_MASK) * 100
 }
 
 pub fn convert_sample_rate_to_register(period: u16) -> u8 {

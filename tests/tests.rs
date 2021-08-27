@@ -1,12 +1,22 @@
 use embedded_hal_mock::i2c::Transaction as I2cTrans;
 use lm75::{FaultQueue, OsMode, OsPolarity};
+
 mod common;
-use crate::common::{assert_invalid_input_data_error, destroy, new, Register, ADDR};
+
+use crate::common::{
+    assert_invalid_input_data_error, destroy, destroy_pct2075, new, new_pct2075, Register, ADDR,
+};
 
 #[test]
-fn can_create_and_destroy() {
+fn can_create_and_destroy_new() {
     let sensor = new(&[]);
     destroy(sensor);
+}
+
+#[test]
+fn can_create_and_destroy_new_pct2075() {
+    let sensor = new_pct2075(&[]);
+    destroy_pct2075(sensor);
 }
 
 #[test]
@@ -34,6 +44,31 @@ fn can_read_temperature() {
     assert!(-24.4 > temp);
     assert!(-24.6 < temp);
     destroy(sensor);
+}
+
+#[test]
+fn can_read_temperature_pct2075() {
+    let mut sensor = new_pct2075(&[I2cTrans::write_read(
+        ADDR,
+        vec![Register::TEMPERATURE],
+        vec![0b1110_0111, 0b1010_0101], // -24.375
+    )]);
+    let temp = sensor.read_temperature().unwrap();
+    assert!(-24.3 > temp);
+    assert!(-24.4 < temp);
+    destroy_pct2075(sensor);
+}
+
+#[test]
+fn can_read_sample_rate() {
+    let mut sensor = new_pct2075(&[I2cTrans::write_read(
+        ADDR,
+        vec![Register::T_IDLE],
+        vec![0b0000_0001], // 100ms
+    )]);
+    let period = sensor.read_sample_rate().unwrap();
+    assert_eq!(100, period);
+    destroy_pct2075(sensor);
 }
 
 macro_rules! set_config_test {
@@ -122,7 +157,7 @@ set_temp_test!(
     0.5,
     Register::T_OS,
     0b0000_0000,
-    1
+    0b1000_0000
 );
 set_temp_test!(
     can_set_os_temp_min,
@@ -160,7 +195,7 @@ set_temp_test!(
     0.5,
     Register::T_HYST,
     0b0000_0000,
-    1
+    0b1000_0000
 );
 set_temp_test!(
     can_set_hyst_temp_min,
@@ -189,3 +224,50 @@ invalid_temp_test!(
     set_hysteresis_temperature,
     125.5
 );
+
+macro_rules! set_sample_rate_test {
+    ( $test_name:ident, $method:ident, $value:expr, $register:expr,
+      $period:expr) => {
+        #[test]
+        fn $test_name() {
+            let mut sensor = new_pct2075(&[I2cTrans::write(ADDR, vec![$register, $period])]);
+            sensor.$method($value).unwrap();
+            destroy_pct2075(sensor);
+        }
+    };
+}
+
+set_sample_rate_test!(
+    can_set_max_sample_rate,
+    set_sample_rate,
+    3100,
+    Register::T_IDLE,
+    0b0001_1111
+);
+set_sample_rate_test!(
+    can_set_custom_sample_rate,
+    set_sample_rate,
+    1500,
+    Register::T_IDLE,
+    0b0000_1111
+);
+set_sample_rate_test!(
+    can_set_default_sample_rate,
+    set_sample_rate,
+    100,
+    Register::T_IDLE,
+    0b0000_0001
+);
+
+macro_rules! invalid_sample_rate_test {
+    ($test_name:ident, $method:ident, $value:expr) => {
+        #[test]
+        fn $test_name() {
+            let mut sensor = new_pct2075(&[]);
+            assert_invalid_input_data_error(sensor.$method($value));
+        }
+    };
+}
+
+invalid_sample_rate_test!(set_sample_rate_too_high, set_sample_rate, 4000);
+invalid_sample_rate_test!(set_non_multiple_sample_rate, set_sample_rate, 1234);

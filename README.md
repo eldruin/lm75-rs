@@ -74,7 +74,8 @@ fn main() {
 
 ## Support
 
-For questions, issues, feature requests, and other changes, please file an
+For questions, issues, feature requests and other changes, as well as if you
+are interested in supporting a similar sensor, please file an
 [issue in the github project](https://github.com/eldruin/lm75-rs/issues).
 
 ## License

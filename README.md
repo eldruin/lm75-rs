@@ -17,7 +17,7 @@ This driver allows you to:
 - Set the hysteresis temperature.
 - Set the OS operation mode.
 - Set the OS polarity.
-- Set the sample rate of temperature measurements (PCT2075 only) 
+- Set the sample rate of temperature measurements (PCT2075 only)
 
 ## The device
 
@@ -40,29 +40,17 @@ This driver is also compatible with at least [LM75A], [LM75B, LM75C],
 [STDS75], [TCN75], [PCT2075].
 
 [AT30TS75A]: http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8839-DTS-AT30TS75A-Datasheet.pdf
-
 [DS1775]: https://datasheets.maximintegrated.com/en/ds/DS1775-DS1775R.pdf
-
 [DS75]: https://datasheets.maximintegrated.com/en/ds/DS75.pdf
-
 [DS7505]: https://datasheets.maximintegrated.com/en/ds/DS7505.pdf
-
 [G751]: http://www.gmt.com.tw/product/datasheet/EDS-751.pdf
-
 [LM75A]: https://www.nxp.com/docs/en/data-sheet/LM75A.pdf
-
 [LM75B, LM75C]: http://www.ti.com/lit/ds/symlink/lm75b.pdf
-
 [MAX6625]: https://datasheets.maximintegrated.com/en/ds/MAX6625-MAX6626.pdf
-
 [MAX7500/1/2/3/4]: https://datasheets.maximintegrated.com/en/ds/MAX7500-MAX7504.pdf
-
 [MCP9800/1/2/3]: http://ww1.microchip.com/downloads/en/DeviceDoc/21909d.pdf
-
 [STDS75]: https://www.st.com/resource/en/datasheet/stds75.pdf
-
 [TCN75]: http://ww1.microchip.com/downloads/en/DeviceDoc/21490D.pdf
-
 [PCT2075]: https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf
 
 ### Usage

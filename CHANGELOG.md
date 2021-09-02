@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-...
+### Added
+- Support for PCT2075 devices. Thanks to @dkhayes117
+
+### Changed
+- [breaking-change] `SlaveAddr` has been renamed `Address` and now features conversions
+  from bool tuples and custom `u8` values. Thanks to @dkhayes117
 
 ## [0.1.2] - 2021-01-30
 

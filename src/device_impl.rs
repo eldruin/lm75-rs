@@ -110,6 +110,7 @@ where
 
     /// Set the OS temperature (celsius).
     pub fn set_os_temperature(&mut self, temperature: f32) -> Result<(), Error<E>> {
+        #[allow(clippy::manual_range_contains)]
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
         }
@@ -122,6 +123,7 @@ where
 
     /// Set the hysteresis temperature (celsius).
     pub fn set_hysteresis_temperature(&mut self, temperature: f32) -> Result<(), Error<E>> {
+        #[allow(clippy::manual_range_contains)]
         if temperature < -55.0 || temperature > 125.0 {
             return Err(Error::InvalidInputData);
         }

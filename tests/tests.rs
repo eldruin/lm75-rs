@@ -1,11 +1,9 @@
-use embedded_hal_mock::i2c::Transaction as I2cTrans;
+use embedded_hal_mock::eh1::i2c::Transaction as I2cTrans;
 use lm75::{FaultQueue, OsMode, OsPolarity};
 
 mod common;
 
-use crate::common::{
-    assert_invalid_input_data_error, destroy, destroy_pct2075, new, new_pct2075, Register, ADDR,
-};
+use crate::common::{assert_invalid_input_data_error, destroy, new, new_pct2075, Register, ADDR};
 
 #[test]
 fn can_create_and_destroy_new() {
@@ -16,7 +14,7 @@ fn can_create_and_destroy_new() {
 #[test]
 fn can_create_and_destroy_new_pct2075() {
     let sensor = new_pct2075(&[]);
-    destroy_pct2075(sensor);
+    destroy(sensor);
 }
 
 #[test]
@@ -56,7 +54,7 @@ fn can_read_temperature_pct2075() {
     let temp = sensor.read_temperature().unwrap();
     assert!(-24.3 > temp);
     assert!(-24.4 < temp);
-    destroy_pct2075(sensor);
+    destroy(sensor);
 }
 
 #[test]
@@ -68,7 +66,7 @@ fn can_read_sample_rate() {
     )]);
     let period = sensor.read_sample_rate().unwrap();
     assert_eq!(100, period);
-    destroy_pct2075(sensor);
+    destroy(sensor);
 }
 
 macro_rules! set_config_test {
@@ -182,6 +180,7 @@ macro_rules! invalid_temp_test {
         fn $test_name() {
             let mut sensor = new(&[]);
             assert_invalid_input_data_error(sensor.$method($value));
+            destroy(sensor);
         }
     };
 }
@@ -232,7 +231,7 @@ macro_rules! set_sample_rate_test {
         fn $test_name() {
             let mut sensor = new_pct2075(&[I2cTrans::write(ADDR, vec![$register, $period])]);
             sensor.$method($value).unwrap();
-            destroy_pct2075(sensor);
+            destroy(sensor);
         }
     };
 }
@@ -265,6 +264,7 @@ macro_rules! invalid_sample_rate_test {
         fn $test_name() {
             let mut sensor = new_pct2075(&[]);
             assert_invalid_input_data_error(sensor.$method($value));
+            destroy(sensor)
         }
     };
 }

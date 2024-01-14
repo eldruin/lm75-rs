@@ -1,4 +1,4 @@
-use embedded_hal_mock::i2c::{Mock as I2cMock, Transaction as I2cTrans};
+use embedded_hal_mock::eh1::i2c::{Mock as I2cMock, Transaction as I2cTrans};
 use lm75::{ic, Address, Error, Lm75};
 
 pub const ADDR: u8 = 0b100_1000;
@@ -21,11 +21,7 @@ pub fn new_pct2075(transactions: &[I2cTrans]) -> Lm75<I2cMock, ic::Pct2075> {
     Lm75::new_pct2075(I2cMock::new(transactions), Address::default())
 }
 
-pub fn destroy(sensor: Lm75<I2cMock, ic::Lm75>) {
-    sensor.destroy().done();
-}
-
-pub fn destroy_pct2075(sensor: Lm75<I2cMock, ic::Pct2075>) {
+pub fn destroy<IC>(sensor: Lm75<I2cMock, IC>) {
     sensor.destroy().done();
 }
 

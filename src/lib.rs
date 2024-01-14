@@ -254,7 +254,7 @@ pub enum OsMode {
 
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy)]
 struct Config {
     bits: u8,
 }
@@ -269,12 +269,6 @@ impl Config {
         Config {
             bits: self.bits & !mask,
         }
-    }
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Config { bits: 0 }
     }
 }
 

@@ -180,7 +180,6 @@
 //! sensor.enable().unwrap();
 //! ```
 
-#![doc(html_root_url = "https://docs.rs/lm75/0.2.0")]
 #![deny(missing_docs, unsafe_code)]
 #![no_std]
 

@@ -2,6 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/lm75.svg)](https://crates.io/crates/lm75)
 [![Docs](https://docs.rs/lm75/badge.svg)](https://docs.rs/lm75)
+![Minimum Supported Rust Version](https://img.shields.io/badge/rustc-1.60+-blue.svg)
 [![Build Status](https://github.com/eldruin/lm75-rs/workflows/Build/badge.svg)](https://github.com/eldruin/lm75-rs/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/eldruin/lm75-rs/badge.svg?branch=master)](https://coveralls.io/github/eldruin/lm75-rs?branch=master)
 
@@ -93,4 +94,3 @@ at your option.
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as
 defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
-

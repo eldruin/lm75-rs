@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Added
+- Derived common traits for enums.
+
 ### Changed
-- Update `embedded-hal` to version 1.0
-- Raised MSRV to 1.60.0
+- Update `embedded-hal` to version 1.0.
+- Raised MSRV to 1.62.0
 
 ## [0.2.0] - 2021-09-02
 

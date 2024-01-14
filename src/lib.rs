@@ -195,7 +195,7 @@ pub enum Error<E> {
 }
 
 /// I2C device address
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Address(pub(crate) u8);
 
 /// Default address
@@ -222,9 +222,10 @@ impl From<(bool, bool, bool)> for Address {
 /// Fault queue
 ///
 /// Number of consecutive faults necessary to trigger OS condition.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum FaultQueue {
     /// 1 fault will trigger OS condition (default)
+    #[default]
     _1,
     /// 2 consecutive faults will trigger OS condition
     _2,
@@ -235,18 +236,20 @@ pub enum FaultQueue {
 }
 
 /// OS polarity
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum OsPolarity {
     /// Active low (default)
+    #[default]
     ActiveLow,
     /// Active high
     ActiveHigh,
 }
 
 /// OS operation mode
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum OsMode {
     /// Comparator (default)
+    #[default]
     Comparator,
     /// Interrupt
     Interrupt,

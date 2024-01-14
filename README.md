@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/lm75.svg)](https://crates.io/crates/lm75)
 [![Docs](https://docs.rs/lm75/badge.svg)](https://docs.rs/lm75)
-![Minimum Supported Rust Version](https://img.shields.io/badge/rustc-1.60+-blue.svg)
+![Minimum Supported Rust Version](https://img.shields.io/badge/rustc-1.62+-blue.svg)
 [![Build Status](https://github.com/eldruin/lm75-rs/workflows/Build/badge.svg)](https://github.com/eldruin/lm75-rs/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/eldruin/lm75-rs/badge.svg?branch=master)](https://coveralls.io/github/eldruin/lm75-rs?branch=master)
 
@@ -79,14 +79,21 @@ For questions, issues, feature requests and other changes, as well as if you
 are interested in supporting a similar sensor, please file an
 [issue in the github project](https://github.com/eldruin/lm75-rs/issues).
 
+## Minimum Supported Rust Version (MSRV)
+
+This crate is guaranteed to compile on stable Rust 1.62 and up. It *might*
+compile with older versions but that may change in any new patch release.
+
+The MSRV will not be updated in any patch release.
+
 ## License
 
 Licensed under either of
 
 * Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or
-  http://www.apache.org/licenses/LICENSE-2.0)
+  <http://www.apache.org/licenses/LICENSE-2.0>)
 * MIT license ([LICENSE-MIT](LICENSE-MIT) or
-  http://opensource.org/licenses/MIT)
+  <http://opensource.org/licenses/MIT>)
 
 at your option.
 
